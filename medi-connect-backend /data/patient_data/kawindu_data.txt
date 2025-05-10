@@ -1,1 +1,0 @@
-{"nameWithInitials":"Mr. Janith","age":29,"gender":"Male","address":"123 Main Street, Colombo","username":"kawindu","password":"1234","phoneNumber":"0771234567","profilePicture":"jdoe.jpg"}
