@@ -1,0 +1,22 @@
+[
+  {
+    "Colombo General Hospital": {
+      "next_time_slot": "08:20",
+      "appointments": [
+        {
+          "patient_username": "kasun",
+          "urgency": 3,
+          "booking_dateTime": 1746730685368
+        },
+        {
+          "patient_username": "pasindu",
+          "urgency": 1,
+          "booking_dateTime": 1746727419673
+        }
+      ],
+      "number_of_bookings": 2,
+      "total_appointments": 12,
+      "time_slot": "08:00 - 10:00"
+    }
+  }
+]

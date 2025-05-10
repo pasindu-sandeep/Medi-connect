@@ -1,0 +1,38 @@
+[
+  {
+    "doctorUsername": "supun",
+    "hospitalName": "Colombo General Hospital",
+    "timeSlot": "15:00 - 16:00",
+    "date": "2025-05-12",
+    "urgency": 1,
+    "status": "booked",
+    "bookedAt": 1746594630262
+  },
+  {
+    "doctorUsername": "pasindu1",
+    "hospitalName": "Colombo General",
+    "timeSlot": "09:00 - 12:00",
+    "date": "2025-05-12",
+    "urgency": 4,
+    "status": "booked",
+    "bookedAt": 1746595085500
+  },
+  {
+    "doctorUsername": "pasindu1",
+    "hospitalName": "Lanka Hospital",
+    "timeSlot": "13:00 - 14:00",
+    "date": "2025-05-12",
+    "urgency": 1,
+    "status": "booked",
+    "bookedAt": 1746638788686
+  },
+  {
+    "doctorUsername": "dupun",
+    "hospitalName": "Colombo General Hospital",
+    "timeSlot": "08:00 - 10:00",
+    "date": "2025-05-12",
+    "urgency": 1,
+    "status": "booked",
+    "bookedAt": 1746727419681
+  }
+]

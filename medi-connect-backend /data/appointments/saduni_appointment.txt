@@ -1,0 +1,20 @@
+[
+  {
+    "doctorUsername": "supun",
+    "hospitalName": "Colombo General Hospital",
+    "timeSlot": "15:00 - 16:00",
+    "date": "2025-05-12",
+    "urgency": 3,
+    "status": "booked",
+    "bookedAt": 1746592489196
+  },
+  {
+    "doctorUsername": "supun",
+    "hospitalName": "Colombo General Hospital",
+    "timeSlot": "15:00 - 16:00",
+    "date": "2025-05-05",
+    "urgency": 3,
+    "status": "booked",
+    "bookedAt": 1746594611626
+  }
+]
