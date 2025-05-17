@@ -3,6 +3,7 @@ package com.example.backend.servlets.doctor;
 import com.google.gson.Gson;
 import com.example.backend.models.Doctor;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class DoctorListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+        System.out.println("data path : " + doctorDataPath);
         // Allow cross-origin request from frontend
         resp.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");

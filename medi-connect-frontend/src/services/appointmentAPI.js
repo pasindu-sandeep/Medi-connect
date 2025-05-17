@@ -76,3 +76,30 @@ export const getSystemStats = async () => {
     throw error;
   }
 };
+
+export const bookAppointment = async ({
+  doctorUsername,
+  patientUsername,
+  hospitalName,
+  date,
+  timeSlot,
+  urgency,
+}) => {
+  try {
+    const response = await apiClient.post("/appointments/book", {
+      doctorUsername,
+      patientUsername,
+      hospitalName,
+      date,
+      timeSlot,
+      urgency,
+    });
+
+    return response.data;
+  } catch (error) {
+    // Optional: unwrap error message from server
+    const message =
+      error.response?.data?.error || "Failed to book appointment.";
+    throw new Error(message);
+  }
+};

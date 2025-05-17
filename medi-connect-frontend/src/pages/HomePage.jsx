@@ -8,6 +8,7 @@ import {
   getDoctorsByHospitalsAnsSpecialization,
 } from "../services/doctorInfoAPI";
 import { getHospitalList } from "../services/hospitalInfoAPI";
+import { bookAppointment } from "../services/appointmentAPI";
 
 const HomePage = () => {
   const [inputValue, setInputValue] = useState("");
@@ -125,7 +126,6 @@ const HomePage = () => {
       }
     };
 
-    // Uncomment below if you want to load real data:
     fetchDoctors();
     fetchHospitals();
   }, []);
@@ -146,11 +146,11 @@ const HomePage = () => {
           specialization
         );
         setFilteredDoctors(results);
-        setdoctorByNameResult(null); // Clear previous
+        setdoctorByNameResult(null);
       } else if (inputValue) {
         const doctorInfo = await getDoctorByName(inputValue);
         setdoctorByNameResult(doctorInfo);
-        setFilteredDoctors([]); // Clear previous
+        setFilteredDoctors([]);
         setTimeout(() => {
           doctorRef.current?.scrollIntoView({
             behavior: "smooth",
@@ -164,6 +164,29 @@ const HomePage = () => {
       console.error("Search failed:", error);
       alert("Failed to fetch doctor data.");
     }
+  };
+
+  const getNextDateForWeekday = (weekdayName) => {
+    const weekdays = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const today = new Date();
+    const todayIndex = today.getDay();
+    const targetIndex = weekdays.indexOf(weekdayName);
+
+    let daysToAdd = (targetIndex - todayIndex + 7) % 7;
+    if (daysToAdd === 0) daysToAdd = 7;
+
+    const nextDate = new Date();
+    nextDate.setDate(today.getDate() + daysToAdd);
+
+    return nextDate.toISOString().split("T")[0];
   };
 
   return (
@@ -217,7 +240,8 @@ const HomePage = () => {
                     filteredDoctors_.map((doc, idx) => (
                       <li
                         key={idx}
-                        onClick={() => handleDoctorSelect(doc.name)}
+                        // Use onMouseDown instead of onClick to ensure it triggers BEFORE onBlur
+                        onMouseDown={() => handleDoctorSelect(doc.name)}
                         className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       >
                         <div className="font-medium">{doc.name}</div>
@@ -321,7 +345,12 @@ const HomePage = () => {
                 {Object.entries(doctorByNameResult.availability).map(
                   ([day, slots]) => (
                     <div key={day}>
-                      <p className="font-semibold text-gray-800 mb-1">{day}</p>
+                      <p className="font-semibold text-gray-800 mb-1">
+                        {day}{" "}
+                        <span className="text-sm text-gray-500">
+                          ({getNextDateForWeekday(day)})
+                        </span>
+                      </p>
                       {slots.length > 0 ? (
                         <ul className="space-y-2">
                           {slots.map((slot, idx) => (
@@ -336,8 +365,11 @@ const HomePage = () => {
                               <button
                                 className="bg-blue-600 text-white px-3 py-1 text-sm rounded hover:bg-blue-700 transition"
                                 onClick={() => {
-                                  setSelectedSlot(slot); // set the slot for which appointment is being placed
-                                  setShowUrgencyModal(true); // show modal
+                                  setSelectedSlot({
+                                    ...slot,
+                                    date: getNextDateForWeekday(day),
+                                  });
+                                  setShowUrgencyModal(true);
                                 }}
                               >
                                 Channel
@@ -397,37 +429,21 @@ const HomePage = () => {
                             localStorage.getItem("profile")
                           )?.username;
 
-                          const res = await fetch(
-                            "http://localhost:8080/medi-connect-backend/api/appointments/book",
-                            {
-                              method: "POST",
-                              headers: {
-                                "Content-Type": "application/json",
-                              },
-                              body: JSON.stringify({
-                                doctorUsername:
-                                  doctorByNameResult.doctor.username,
-                                patientUsername: user.username,
-                                hospitalName: selectedSlot.hospitalName,
-                                date: "2025-05-12",
-                                timeSlot: selectedSlot.timeSlot,
-                                urgency,
-                              }),
-                            }
-                          );
+                          await bookAppointment({
+                            doctorUsername: doctorByNameResult.doctor.username,
+                            patientUsername: user.username,
+                            hospitalName: selectedSlot.hospitalName,
+                            date: selectedSlot.date, // ✅ use dynamic date
+                            timeSlot: selectedSlot.timeSlot,
+                            urgency,
+                          });
 
-                          if (!res.ok) {
-                            const error = await res.json();
-                            alert(error.error || "Failed to book appointment.");
-                          } else {
-                            alert("Appointment booked successfully!");
-                          }
-
+                          alert("Appointment booked successfully!");
                           setShowUrgencyModal(false);
                           setUrgency(1);
                         } catch (err) {
                           console.error(err);
-                          alert("Error placing appointment.");
+                          alert(err.message || "Failed to book appointment");
                         }
                       }}
                     >

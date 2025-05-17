@@ -1,86 +1,15 @@
 import React from "react";
+import { addToCart } from "../services/cartAPI.js";
 
-const products = [
-  {
-    name: "Paracetamol 500mg (100 Tablets)",
-    category: "Pain Relief, Fever",
-    price: "Rs. 320.00",
-    stock: 20,
-    image: "healthmart/paracetamol.png",
-    sku: "MED001",
-  },
-  {
-    name: "Cetirizine 10mg (30 Tablets)",
-    category: "Allergy Relief",
-    price: "Rs. 180.00",
-    stock: 15,
-    image: "healthmart/zytec.png",
-    sku: "MED002",
-  },
-  {
-    name: "Omeprazole 20mg (14 Capsules)",
-    category: "Acidity, Gastric Care",
-    price: "Rs. 250.00",
-    stock: 10,
-    image: "healthmart/omeprazole.png",
-    sku: "MED003",
-  },
-  {
-    name: "Amoxicillin 500mg (20 Capsules)",
-    category: "Antibiotic",
-    price: "Rs. 450.00",
-    stock: 12,
-    image: "healthmart/amoxilline.png",
-    sku: "MED004",
-  },
-  {
-    name: "Ibuprofen 400mg (10 Tablets)",
-    category: "Pain Relief, Anti-inflammatory",
-    price: "Rs. 220.00",
-    stock: 8,
-    image: "healthmart/ibuprofen.png",
-    sku: "MED005",
-  },
-  {
-    name: "Metformin 500mg (30 Tablets)",
-    category: "Diabetes Management",
-    price: "Rs. 300.00",
-    stock: 25,
-    image: "healthmart/metform.png",
-    sku: "MED006",
-  },
-  {
-    name: "Loratadine 10mg (10 Tablets)",
-    category: "Allergy Relief",
-    price: "Rs. 160.00",
-    stock: 0,
-    image: "healthmart/claritin.png",
-    sku: "MED007",
-  },
-  {
-    name: "ORS Sachets (5 Packets)",
-    category: "Dehydration, Electrolytes",
-    price: "Rs. 140.00",
-    stock: 30,
-    image: "healthmart/ors.png",
-    sku: "MED008",
-  },
-  {
-    name: "Vitamin C 1000mg (20 Tablets)",
-    category: "Immunity Boosters",
-    price: "Rs. 350.00",
-    stock: "infinite",
-    image: "healthmart/vc.png",
-  },
-  {
-    name: "Salbutamol Inhaler 100mcg",
-    category: "Asthma, Respiratory Care",
-    price: "Rs. 520.00",
-    stock: 6,
-    image: "healthmart/salbutamol.png",
-    sku: "MED010",
-  },
-];
+// Move this outside if you want to share it across files
+const handleAddToCart = async (product) => {
+  try {
+    await addToCart(product);
+    alert("Item added to cart!");
+  } catch (error) {
+    alert("Failed to add item to cart.");
+  }
+};
 
 const ProductCard = ({ product }) => {
   const { name, category, price, stock, image, sku } = product;
@@ -109,14 +38,12 @@ const ProductCard = ({ product }) => {
       <p className="text-red-600 font-bold mb-3">{price}</p>
 
       {inStock ? (
-        <div className="flex gap-2">
-          <button className="bg-gray-200 text-gray-800 px-3 py-1 text-sm rounded">
-            -
-          </button>
-          <button className="bg-blue-600 text-white flex-1 py-1 text-sm rounded hover:bg-blue-700">
-            Add To Cart
-          </button>
-        </div>
+        <button
+          className="bg-blue-600 text-white w-full py-1 text-sm rounded hover:bg-blue-700"
+          onClick={() => handleAddToCart(product)}
+        >
+          Add To Cart
+        </button>
       ) : (
         <button className="bg-gray-400 text-white w-full py-1 text-sm rounded cursor-not-allowed">
           Read More
@@ -127,16 +54,18 @@ const ProductCard = ({ product }) => {
   );
 };
 
-const HealthMart = () => {
+// ✅ Now only accepts `products` as prop
+const HealthMart = ({ products }) => {
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold mb-8 text-center text-blue-700">
-        Health Mart
-      </h1>
+    <div className="p-6 pt-32 bg-gray-50 min-h-screen">
       <div className="flex flex-wrap gap-6 justify-center">
-        {products.map((product, index) => (
-          <ProductCard key={index} product={product} />
-        ))}
+        {products.length > 0 ? (
+          products.map((product, index) => (
+            <ProductCard key={index} product={product} />
+          ))
+        ) : (
+          <p className="text-gray-500 text-sm mt-12">No products found.</p>
+        )}
       </div>
     </div>
   );

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import LoginModal from "./LoginModel";
 
-const HealthMart_Header = () => {
+const HealthMart_Header = ({ onSearch }) => {
   const [user, setUser] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -13,15 +13,10 @@ const HealthMart_Header = () => {
     if (stored) setUser(JSON.parse(stored));
   }, []);
 
-  const Search = (query) => {
-    console.log("Search query:", query);
-    // Implement search functionality here
-  };
-
   return (
-    <header className="fixed top-0 left-0 bg-gray-600 w-full z-20">
+    <header className="fixed top-0 left-0 bg-gray-600 w-full z-20 shadow">
       <div className="flex flex-row items-center justify-between p-2 px-4">
-        {/* Left Section */}
+        {/* Left: Logo & Back */}
         <div className="flex items-center space-x-2">
           <Link to="/">
             <ArrowLeft className="cursor-pointer text-white" />
@@ -40,13 +35,20 @@ const HealthMart_Header = () => {
         </div>
 
         {/* Center: Search */}
-        <div className="flex-grow mx-6">
-          <SearchBar onSearch={Search} />
+        <div className="flex-grow mx-6 max-w-2xl">
+          <SearchBar onSearch={onSearch} />
         </div>
 
-        {/* Right: Login/Profile */}
-        <div>
-          {/* Profile or Login Button */}
+        {/* Right: Cart & Profile */}
+        <div className="flex items-center gap-4">
+          <Link
+            to="/cart"
+            className="text-white hover:text-yellow-300 transition"
+            title="View Cart"
+          >
+            <ShoppingCart className="w-8 h-8" />
+          </Link>
+
           {user ? (
             <Link
               to={
@@ -54,7 +56,7 @@ const HealthMart_Header = () => {
                   ? "/profile/doctor"
                   : "/profile/patient"
               }
-              className="flex items-center space-x-2 text-white pr-4"
+              className="flex items-center gap-2 text-white"
             >
               <img
                 src={
@@ -75,7 +77,7 @@ const HealthMart_Header = () => {
               <img
                 src="assets/default-avatar-profile-icon.jpg"
                 alt="Default"
-                className="w-5 h-5 rounded-full border-2 border-white shadow-md object-cover"
+                className="w-5 h-5 rounded-full object-cover border-2"
               />
               <span>Login</span>
             </button>
@@ -83,7 +85,6 @@ const HealthMart_Header = () => {
         </div>
       </div>
 
-      {/* Login Modal */}
       <LoginModal
         show={showLoginModal}
         onClose={() => setShowLoginModal(false)}

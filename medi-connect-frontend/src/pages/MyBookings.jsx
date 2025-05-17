@@ -21,20 +21,35 @@ const MyBookings = () => {
     };
 
     fetchAppointments();
-  }, []);
+  }, [user]);
 
   const handleDelete = async (appt) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this appointment?"
+      "Are you sure you want to cancel this appointment?"
     );
     if (!confirmed) return;
 
     try {
-      await deleteAppointment(appt);
-      setAppointments((prev) => prev.filter((a) => a !== appt));
-      alert("Appointment deleted");
-    } catch {
-      alert("Failed to delete");
+      // ✅ Ensure patientUsername is included
+      await deleteAppointment({
+        ...appt,
+        patientUsername: user.username,
+      });
+
+      // ✅ Filter by values instead of object identity
+      setAppointments((prev) =>
+        prev.filter(
+          (a) =>
+            a.doctorUsername !== appt.doctorUsername ||
+            a.date !== appt.date ||
+            a.timeSlot !== appt.timeSlot
+        )
+      );
+
+      alert("Appointment cancelled successfully");
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("Failed to delete appointment");
     }
   };
 

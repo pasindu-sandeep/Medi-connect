@@ -18,6 +18,6 @@
 
   <context-param>
     <param-name>dataFilePath</param-name>
-    <param-value>C:\Users\USER\Desktop\medi-connect\medi-connect-backend\data</param-value>
+    <param-value>data</param-value>
   </context-param>
 </web-app>

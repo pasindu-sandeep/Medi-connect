@@ -2,13 +2,13 @@ package com.example.backend.servlets.appointment;
 
 import com.example.backend.models.Appointment;
 import com.google.gson.*;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.*;
 import java.nio.file.*;
 import java.time.*;
 import java.util.*;
-import java.util.stream.*;
 
 @WebServlet("/api/appointments/book")
 public class PlaceAppointmentServlet extends HttpServlet {
@@ -30,15 +30,13 @@ public class PlaceAppointmentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
-        // Allow cross-origin request from frontend
         resp.setHeader("Access-Control-Allow-Origin", "*");
-        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
         Gson gson = new Gson();
         Appointment appointment = gson.fromJson(req.getReader(), Appointment.class);
 
-        String day = LocalDate.parse(appointment.date).getDayOfWeek().name().toLowerCase(); // e.g., "monday"
+        LocalDate targetDate = LocalDate.parse(appointment.date);
+        String day = targetDate.getDayOfWeek().name().toLowerCase(); // e.g., "monday"
         Path slotFilePath = Paths.get(baseDir, "doctor_data", appointment.doctorUsername + "_timeSlots", day);
 
         if (!Files.exists(slotFilePath)) {
@@ -56,54 +54,52 @@ public class PlaceAppointmentServlet extends HttpServlet {
             if (hospitalMap.has(appointment.hospitalName)) {
                 JsonObject slotData = hospitalMap.get(appointment.hospitalName).getAsJsonObject();
 
-                // Check timeSlot matches
-                if (!slotData.get("time_slot").getAsString().equals(appointment.timeSlot)) {
-                    continue;
+                if (!slotData.get("time_slot").getAsString().equals(appointment.timeSlot)) continue;
+
+                // 🧹 Clear all previous appointments and start fresh for new date
+                JsonArray currentAppointments = slotData.getAsJsonArray("appointments");
+                JsonArray newAppointmentsList = new JsonArray();
+
+                // Retain only appointments with same date
+                for (JsonElement apptEl : currentAppointments) {
+                    JsonObject appt = apptEl.getAsJsonObject();
+                    if (appt.has("date") && appointment.date.equals(appt.get("date").getAsString())) {
+                        newAppointmentsList.add(appt);
+                    }
                 }
 
-                // Prepare new appointment
+                // 🔁 Check for duplicate for same patient and date
+                for (JsonElement app : newAppointmentsList) {
+                    if (app.getAsJsonObject().get("patient_username").getAsString()
+                            .equals(appointment.patientUsername)) {
+                        resp.setStatus(409);
+                        resp.getWriter().write("{\"error\":\"Appointment already exists for this patient on this date.\"}");
+                        return;
+                    }
+                }
+
+                // ✅ Add new appointment
                 JsonObject newAppt = new JsonObject();
                 newAppt.addProperty("patient_username", appointment.patientUsername);
                 newAppt.addProperty("urgency", appointment.urgency);
                 newAppt.addProperty("booking_dateTime", System.currentTimeMillis());
+                newAppt.addProperty("date", appointment.date);
+                newAppointmentsList.add(newAppt);
 
-                // Append and sort
-                JsonArray apptArray = slotData.getAsJsonArray("appointments");
+                // 🔽 Sort using quick sort
+                List<JsonObject> sortedList = new ArrayList<>();
+                for (JsonElement e : newAppointmentsList) sortedList.add(e.getAsJsonObject());
+                quickSortByUrgency(sortedList, 0, sortedList.size() - 1);
 
-                // Check for duplicate
-                boolean alreadyBooked = StreamSupport.stream(apptArray.spliterator(), false)
-                        .anyMatch(json -> json.getAsJsonObject().get("patient_username").getAsString().equals(appointment.patientUsername));
+                JsonArray sortedAppointments = new JsonArray();
+                for (JsonObject obj : sortedList) sortedAppointments.add(obj);
 
-                if (alreadyBooked) {
-                    resp.setStatus(409); // Conflict
-                    resp.getWriter().write("{\"error\":\"Appointment already exists for this patient in this time slot.\"}");
-                    return;
-                }
+                slotData.add("appointments", sortedAppointments);
+                slotData.addProperty("number_of_bookings", sortedAppointments.size());
+                slotData.addProperty("next_time_slot", calculateNextTime(slotData.get("time_slot").getAsString(), sortedAppointments.size()));
 
-                apptArray.add(newAppt);
-
-                List<JsonElement> sortedAppointments = StreamSupport.stream(apptArray.spliterator(), false)
-                        .sorted((a, b) -> Integer.compare(
-                                b.getAsJsonObject().get("urgency").getAsInt(),
-                                a.getAsJsonObject().get("urgency").getAsInt()))
-                        .collect(Collectors.toList());
-
-                JsonArray sortedArray = new JsonArray();
-                sortedAppointments.forEach(sortedArray::add);
-
-                slotData.add("appointments", sortedArray);
-                slotData.addProperty("number_of_bookings", sortedArray.size());
-
-                // Update next_time_slot
-                int nextSlotIndex = sortedArray.size();
-                String nextTime = calculateNextTime(slotData.get("time_slot").getAsString(), nextSlotIndex);
-                slotData.addProperty("next_time_slot", nextTime);
-
-                updated = true;
-
-                // Save to patient's appointment file
+                // 📁 Save patient appointment history
                 Path userAppointmentFile = Paths.get(baseDir, "appointments", appointment.patientUsername + "_appointment.txt");
-
                 JsonArray userAppointments;
                 if (Files.exists(userAppointmentFile)) {
                     userAppointments = JsonParser.parseString(Files.readString(userAppointmentFile)).getAsJsonArray();
@@ -124,6 +120,7 @@ public class PlaceAppointmentServlet extends HttpServlet {
                 userAppointments.add(userApptEntry);
                 Files.writeString(userAppointmentFile, new GsonBuilder().setPrettyPrinting().create().toJson(userAppointments));
 
+                updated = true;
                 break;
             }
         }
@@ -142,5 +139,26 @@ public class PlaceAppointmentServlet extends HttpServlet {
         LocalTime start = LocalTime.parse(range[0]);
         LocalTime next = start.plusMinutes(index * 10L);
         return next.toString();
+    }
+
+    private void quickSortByUrgency(List<JsonObject> list, int low, int high) {
+        if (low < high) {
+            int pi = partition(list, low, high);
+            quickSortByUrgency(list, low, pi - 1);
+            quickSortByUrgency(list, pi + 1, high);
+        }
+    }
+
+    private int partition(List<JsonObject> list, int low, int high) {
+        int pivot = list.get(high).get("urgency").getAsInt();
+        int i = low - 1;
+        for (int j = low; j < high; j++) {
+            if (list.get(j).get("urgency").getAsInt() >= pivot) {
+                i++;
+                Collections.swap(list, i, j);
+            }
+        }
+        Collections.swap(list, i + 1, high);
+        return i + 1;
     }
 }

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:8080/medi-connect-backend/api/",
+  baseURL: "http://localhost:8080/medi_connect_backend_war_exploded/api/",
   headers: {
     "Content-Type": "application/json",
   },

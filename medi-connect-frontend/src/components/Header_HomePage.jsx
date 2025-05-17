@@ -57,7 +57,10 @@ const Header = () => {
           >
             {[
               { to: "/", label: "Home" },
-              { to: "/my-bookings", label: "My Bookings" },
+              // Only show My Bookings if not a doctor
+              ...(!user || user.userType !== "doctor"
+                ? [{ to: "/my-bookings", label: "My Bookings" }]
+                : []),
               { to: "/health-mart", label: "Health Mart" },
               { to: "/about", label: "About" },
               { to: "/register", label: "Registration" },

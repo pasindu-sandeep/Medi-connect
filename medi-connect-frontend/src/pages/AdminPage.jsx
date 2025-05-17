@@ -6,6 +6,7 @@ import PatientsTable from "../components/dashboardComponents/RegisteredPatientsT
 import HospitalsTable from "../components/dashboardComponents/RegisteredHospitalsTable";
 import TodayAppointments from "../components/dashboardComponents/TodaysAppointmentsTable";
 import Sidebar from "../components/SideBar";
+import CustomerOrders from "../components/dashboardComponents/AdminOrderPage";
 
 const AdminPage = () => {
   const [selectedView, setSelectedView] = useState("dashboard");
@@ -22,6 +23,8 @@ const AdminPage = () => {
         return <HospitalsTable />;
       case "todaysAppoinments":
         return <TodayAppointments />;
+      case "customerOrders":
+        return <CustomerOrders />;
       default:
         return <div className="p-4">Select a view</div>;
     }
