@@ -25,7 +25,7 @@ export const getPatientsProfileInfo = async () => {
   }
 };
 
-export const handleSave = async () => {
+export const handleSave = async (profile) => {
   try {
     const response = await apiClient.put(
       `/profile/${profile.role}/update`,
@@ -41,7 +41,7 @@ export const handleSave = async () => {
   }
 };
 
-export const handleDelete = async () => {
+export const handleDelete = async (profile) => {
   const confirmed = window.confirm(
     "Are you sure you want to delete this account?"
   );

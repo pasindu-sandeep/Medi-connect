@@ -10,42 +10,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4478c5a6-8154-4f57-9660-a050799d02d3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/models/CartItemRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/cart/CartServlet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/order/GetAllOrdersServlet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/order/OrderServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/appointments/jayani_appointment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/appointments/kasun_appointment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/appointments/kavindu_appointment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/appointments/null_appointment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/appointments/pasindu_appointment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/appointments/saduni_appointment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/appointments/sanduni_appointment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/doctor_data/dupun_data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/doctor_data/dupun_schedule.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/doctor_data/dupun_timeSlots/monday" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/doctor_data/dupun_timeSlots/tuesday" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/hospital_data/asiri_hospital_data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/hospital_data/colombo_general_hospital_data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/hospital_data/lanka_hospital_data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/patient_data/jayani_data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/patient_data/kasun_data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/patient_data/kawindu_data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/patient_data/pasindu_data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/patient_data/sanduni_data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/DeleteAppointmentServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/DeleteAppointmentServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/PlaceAppointmentServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/PlaceAppointmentServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorListServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorListServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/components/Header_HealthMart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/components/Header_HealthMart.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/components/SideBar.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/AdminPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/AdminPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/HealthMart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/HealthMart.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/services/apiClient.js" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/services/apiClient.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/hospital/HospitalDeleteServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/DoctorAppointmentCountServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/DoctorAppointmentCountServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/GetAllAppointmentsByDateServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/GetAllAppointmentsByDateServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/GetSystemStatsServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/GetSystemStatsServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/DoctorRegistrstion.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/DoctorRegistrstion.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/HospitalRegister.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/HospitalRegister.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/Profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/Profile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/UserRegistration.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/UserRegistration.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/services/patientAPI.js" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/services/patientAPI.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -301,7 +275,8 @@
       <workItem from="1747408148403" duration="499000" />
       <workItem from="1747408662830" duration="315000" />
       <workItem from="1747409002942" duration="1948000" />
-      <workItem from="1747466375542" duration="20540000" />
+      <workItem from="1747466375542" duration="21705000" />
+      <workItem from="1747568181562" duration="4218000" />
     </task>
     <servers />
   </component>

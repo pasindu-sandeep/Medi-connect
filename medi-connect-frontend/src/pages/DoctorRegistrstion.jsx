@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
-import { Camera, Hospital } from "lucide-react";
+import {
+  Camera,
+  User,
+  Lock,
+  UserCircle,
+  Phone,
+  BriefcaseMedical,
+  CalendarClock,
+  Hospital,
+} from "lucide-react";
 import { getHospitalList } from "../services/hospitalInfoAPI";
 import { registerDoctor } from "../services/doctorInfoAPI";
 
@@ -12,6 +21,14 @@ const daysOfWeek = [
   "Saturday",
   "Sunday",
 ];
+
+const toBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 
 const DoctorRegistration = () => {
   const [hospitals, setHospitals] = useState([]);
@@ -39,6 +56,7 @@ const DoctorRegistration = () => {
     username: "",
     name: "",
     password: "",
+    confirmPassword: "",
     doctorID: "",
     specialization: "",
     contactNumber: "",
@@ -46,8 +64,10 @@ const DoctorRegistration = () => {
     schedule: initializeSchedule(),
   });
 
-  const [previewProfilePicture, setPreviewImage] = useState("");
-  const [previewDoctorID, setDoctorID] = useState("");
+  const [previewProfilePicture, setPreviewImage] = useState(
+    "avatars/male_avatar.png"
+  );
+  const [previewDoctorID, setDoctorID] = useState("id_card.png");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -109,7 +129,11 @@ const DoctorRegistration = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Convert schedule data
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+
     const schedule = {
       doctorUserName: formData.username,
     };
@@ -145,25 +169,16 @@ const DoctorRegistration = () => {
     }
   };
 
-  const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file); // this includes base64 + mime
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-
   return (
-    <div className="min-h-screen w-screen flex items-center justify-center overflow-hidden">
+    <div className="min-h-screen w-screen flex items-center justify-center overflow-hidden bg-gray-100 p-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full flex flex-col md:flex-row bg-white overflow-hidden"
+        className="w-full max-w-7xl flex flex-col md:flex-row bg-white rounded-xl shadow-xl overflow-hidden"
       >
-        {/* Doctor Info */}
-        <div className="w-full md:w-1/2 p-8 bg-white space-y-4">
-          <h2 className="text-2xl text-yellow-500 font-bold flex items-center gap-2 mb-4">
-            <span className="bg-yellow-500 text-white p-1 rounded-full">+</span>
-            Doctor Profile
+        {/* Left Panel */}
+        <div className="w-full md:w-1/3 p-8 bg-white space-y-4">
+          <h2 className="text-2xl text-yellow-500 font-bold mb-4 flex items-center gap-2">
+            <UserCircle size={24} /> Doctor Profile
           </h2>
 
           {/* Profile Picture */}
@@ -172,14 +187,14 @@ const DoctorRegistration = () => {
               {previewProfilePicture && (
                 <img
                   src={previewProfilePicture}
-                  alt="Profile Preview"
-                  className="w-80 h-50 border-4 rounded border-white shadow-md object-cover"
+                  alt="Profile"
+                  className="w-50 h-50 border-4 rounded-full border-white shadow-md object-cover"
                 />
               )}
             </label>
             <label
               htmlFor="profilePicture"
-              className="absolute bottom-1 right-[38%] bg-white p-2 rounded-full shadow-md cursor-pointer"
+              className="absolute bottom-2 right-[42%] bg-white p-2 rounded-full shadow-md cursor-pointer"
             >
               <Camera size={16} className="text-gray-600" />
             </label>
@@ -192,25 +207,22 @@ const DoctorRegistration = () => {
             />
           </div>
 
-          {/* Doctor Details */}
+          {/* Username */}
           <div className="relative">
-            <Hospital
-              className="absolute top-2.5 left-3 text-gray-400"
-              size={18}
-            />
+            <User className="absolute top-2.5 left-3 text-gray-400" size={18} />
             <input
               type="text"
               name="username"
               value={formData.username}
               onChange={handleChange}
-              placeholder="User Name"
-              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-yellow-400 outline-none"
+              placeholder="Username"
+              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white"
             />
           </div>
 
-          {/* profile name */}
+          {/* Name */}
           <div className="relative">
-            <Hospital
+            <UserCircle
               className="absolute top-2.5 left-3 text-gray-400"
               size={18}
             />
@@ -219,36 +231,57 @@ const DoctorRegistration = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Profile Name"
-              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-yellow-400 outline-none"
+              placeholder="Full Name"
+              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white"
             />
           </div>
 
           {/* Password */}
           <div className="relative">
-            <Hospital
-              className="absolute top-2.5 left-3 text-gray-400"
-              size={18}
-            />
+            <Lock className="absolute top-2.5 left-3 text-gray-400" size={18} />
             <input
-              type="text"
+              type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="Password"
-              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-yellow-400 outline-none"
+              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white"
             />
+          </div>
+
+          {/* Confirm Password */}
+          <div className="relative">
+            <Lock className="absolute top-2.5 left-3 text-gray-400" size={18} />
+            <input
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm Password"
+              className={`w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white ${
+                formData.confirmPassword &&
+                formData.password !== formData.confirmPassword
+                  ? "border border-red-500"
+                  : ""
+              }`}
+            />
+            {formData.confirmPassword &&
+              formData.password !== formData.confirmPassword && (
+                <p className="text-red-500 text-sm mt-1">
+                  Passwords do not match
+                </p>
+              )}
           </div>
         </div>
 
-        {/* Vertical Divider */}
+        {/* Divider */}
         <div className="hidden md:block w-0.5 bg-gray-300"></div>
 
-        {/* Doctor Info */}
-        <div className="w-full md:w-1/2 p-8 bg-white space-y-4">
-          <h2 className="text-2xl text-yellow-500 font-bold flex items-center gap-2 mb-4">
-            <span className="bg-yellow-500 text-white p-1 rounded-full">+</span>
-            Details of the Doctor
+        {/* Middle Panel */}
+        <div className="w-full md:w-1/3 p-8 space-y-4 bg-white">
+          <h2 className="text-2xl text-yellow-500 font-bold flex items-center gap-2">
+            <BriefcaseMedical size={20} />
+            Doctor Details
           </h2>
 
           {/* Doctor ID */}
@@ -258,7 +291,7 @@ const DoctorRegistration = () => {
                 <img
                   src={previewDoctorID}
                   alt="Doctor ID"
-                  className="w-80 h-50 border-4 border-white shadow-md object-cover"
+                  className="w-90 h-50 object-cover rounded-md border shadow"
                 />
               )}
             </label>
@@ -279,7 +312,7 @@ const DoctorRegistration = () => {
 
           {/* Specialization */}
           <div className="relative">
-            <Hospital
+            <BriefcaseMedical
               className="absolute top-2.5 left-3 text-gray-400"
               size={18}
             />
@@ -289,13 +322,13 @@ const DoctorRegistration = () => {
               value={formData.specialization}
               onChange={handleChange}
               placeholder="Specialization (e.g. Cardiologist)"
-              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-yellow-400 outline-none"
+              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white"
             />
           </div>
 
           {/* Contact Number */}
           <div className="relative">
-            <Hospital
+            <Phone
               className="absolute top-2.5 left-3 text-gray-400"
               size={18}
             />
@@ -305,112 +338,115 @@ const DoctorRegistration = () => {
               value={formData.contactNumber}
               onChange={handleChange}
               placeholder="Contact Number"
-              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-yellow-400 outline-none"
+              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white"
             />
           </div>
         </div>
 
-        {/* Vertical Divider */}
+        {/* Divider */}
         <div className="hidden md:block w-0.5 bg-gray-300"></div>
 
-        {/* Weekly Schedule */}
-        <div className="w-full md:w-1/2 p-8 bg-white space-y-4 overflow-y-auto max-h-[90vh]">
-          <h2 className="text-2xl text-yellow-500 font-bold flex items-center gap-2">
-            <span className="bg-yellow-500 text-white p-1 rounded-full">
-              📅
-            </span>
-            Weekly Schedule
-          </h2>
+        {/* Right Panel: Schedule */}
+        <div className="w-full md:w-1/3 flex flex-col bg-white max-h-[90vh]">
+          <div className="p-8 space-y-4 overflow-y-auto flex-1">
+            <h2 className="text-2xl text-yellow-500 font-bold flex items-center gap-2">
+              <CalendarClock size={20} />
+              Weekly Schedule
+            </h2>
 
-          {daysOfWeek.map((day) => (
-            <div key={day} className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-800 mb-2">
-                {day}
-              </h3>
+            {daysOfWeek.map((day) => (
+              <div key={day} className="mb-4">
+                <h3 className="text-sm font-semibold text-gray-800 mb-2">
+                  {day}
+                </h3>
 
-              {formData.schedule[day].map((entry, index) => (
-                <div
-                  key={index}
-                  className="border p-2 rounded-md shadow-sm bg-gray-100 space-y-2 relative mb-2"
-                >
-                  <button
-                    type="button"
-                    onClick={() => removeTimeSlot(day, index)}
-                    className="absolute -top-2 -right-2 text-red-500 text-lg"
+                {formData.schedule[day].map((entry, index) => (
+                  <div
+                    key={index}
+                    className="border p-2 rounded-md shadow-sm bg-gray-100 space-y-2 relative mb-2"
                   >
-                    ✖
-                  </button>
-
-                  <div className="flex items-center border rounded-sm overflow-hidden bg-gray-50">
-                    <Hospital className="ml-2 text-gray-400" size={18} />
-                    <select
-                      value={entry.hospital}
-                      onChange={(e) =>
-                        handleScheduleChange(
-                          day,
-                          index,
-                          "hospital",
-                          e.target.value
-                        )
-                      }
-                      className="w-full px-1 outline-none bg-transparent text-sm"
+                    <button
+                      type="button"
+                      onClick={() => removeTimeSlot(day, index)}
+                      className="absolute -top-2 -right-2 text-red-500 text-lg"
                     >
-                      <option>Any Hospital</option>
-                      {hospitals.map((h, idx) => (
-                        <option key={idx} value={h.name || h}>
-                          {h.name || h}
-                        </option>
-                      ))}
-                    </select>
+                      ✖
+                    </button>
+
+                    <div className="flex items-center border rounded-sm overflow-hidden bg-gray-50">
+                      <Hospital className="ml-2 text-gray-400" size={18} />
+                      <select
+                        value={entry.hospital}
+                        onChange={(e) =>
+                          handleScheduleChange(
+                            day,
+                            index,
+                            "hospital",
+                            e.target.value
+                          )
+                        }
+                        className="w-full px-1 outline-none bg-transparent text-sm"
+                      >
+                        <option>Any Hospital</option>
+                        {hospitals.map((h, idx) => (
+                          <option key={idx} value={h.name || h}>
+                            {h.name || h}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="flex gap-1">
+                      <input
+                        type="time"
+                        value={entry.startTime}
+                        onChange={(e) =>
+                          handleScheduleChange(
+                            day,
+                            index,
+                            "startTime",
+                            e.target.value
+                          )
+                        }
+                        className="w-1/2 p-1 rounded border text-sm"
+                      />
+                      <input
+                        type="time"
+                        value={entry.endTime}
+                        onChange={(e) =>
+                          handleScheduleChange(
+                            day,
+                            index,
+                            "endTime",
+                            e.target.value
+                          )
+                        }
+                        className="w-1/2 p-1 text-sm rounded border"
+                      />
+                    </div>
                   </div>
+                ))}
 
-                  <div className="flex gap-1">
-                    <input
-                      type="time"
-                      value={entry.startTime}
-                      onChange={(e) =>
-                        handleScheduleChange(
-                          day,
-                          index,
-                          "startTime",
-                          e.target.value
-                        )
-                      }
-                      className="w-1/2 p-1 rounded border text-sm"
-                    />
-                    <input
-                      type="time"
-                      value={entry.endTime}
-                      onChange={(e) =>
-                        handleScheduleChange(
-                          day,
-                          index,
-                          "endTime",
-                          e.target.value
-                        )
-                      }
-                      className="w-1/2 p-1 text-sm rounded border"
-                    />
-                  </div>
-                </div>
-              ))}
+                <button
+                  type="button"
+                  onClick={() => addTimeSlot(day)}
+                  className="text-blue-600 hover:underline text-sm"
+                >
+                  + Add Time Slot for {day}
+                </button>
+              </div>
+            ))}
+          </div>
 
-              <button
-                type="button"
-                onClick={() => addTimeSlot(day)}
-                className="text-blue-600 hover:underline text-sm"
-              >
-                + Add Time Slot for {day}
-              </button>
-            </div>
-          ))}
-
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-cyan-500 to-teal-400 text-white py-2 rounded shadow-md hover:brightness-110 transition"
-          >
-            Submit Registration
-          </button>
+          {/* Submit Button */}
+          <div className="p-4 border-t sticky bottom-0 bg-white z-10">
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-yellow-500 to-yellow-400 text-white py-2 rounded shadow-md hover:brightness-110 transition"
+            >
+              Register
+            </button>
+          </div>
         </div>
       </form>
     </div>

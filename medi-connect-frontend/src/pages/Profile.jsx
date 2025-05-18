@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react";
-import {
-  getPatientsProfileInfo,
-  handleSave,
-  handleDelete,
-} from "./../services/patientAPI";
+import { getPatientsProfileInfo, handleDelete } from "./../services/patientAPI";
+import apiClient from "./../services/apiClient";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [editable, setEditable] = useState(false);
   const [userType, setUserType] = useState("patient");
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
     if (stored) {
       const parsed = JSON.parse(stored);
-      setUserType(parsed.userType || "patient");
+      setUserType(parsed.role || "patient");
     }
 
     const fetchProfile = async () => {
@@ -33,6 +31,38 @@ const Profile = () => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
+  const validateProfile = () => {
+    const newErrors = {};
+
+    if (!profile.age || isNaN(profile.age) || Number(profile.age) <= 0) {
+      newErrors.age = "Age must be a positive number";
+    }
+
+    if (!["male", "female"].includes(profile.gender)) {
+      newErrors.gender = "Gender must be 'male' or 'female'";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSave = async () => {
+    if (!validateProfile()) return;
+
+    try {
+      const response = await apiClient.put(
+        `/profile/${profile.role}/update`,
+        profile
+      );
+      alert("Profile updated");
+      localStorage.setItem("user", JSON.stringify(profile));
+      setEditable(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("An error occurred while updating the profile.");
+    }
+  };
+
   if (!profile) return <p className="p-6 text-center">Loading profile...</p>;
 
   return (
@@ -47,27 +77,63 @@ const Profile = () => {
         />
       </div>
 
-      {[
-        "nameWithInitials",
-        "username",
-        "phoneNumber",
-        "address",
-        "age",
-        "gender",
-      ].map((field) => (
-        <div key={field}>
-          <label className="block text-sm font-semibold">{field}</label>
-          <input
-            type="text"
-            name={field}
-            value={profile[field] || ""}
-            onChange={handleChange}
-            disabled={!editable}
-            className="w-full mt-1 p-2 border rounded bg-gray-100"
-          />
-        </div>
-      ))}
+      {/* Fields */}
+      {["nameWithInitials", "username", "phoneNumber", "address"].map(
+        (field) => (
+          <div key={field}>
+            <label className="block text-sm font-semibold capitalize">
+              {field.replace(/([A-Z])/g, " $1")}
+            </label>
+            <input
+              type="text"
+              name={field}
+              value={profile[field] || ""}
+              onChange={handleChange}
+              disabled={!editable}
+              className={`w-full mt-1 p-2 border rounded ${
+                editable ? "bg-white" : "bg-gray-100"
+              }`}
+            />
+          </div>
+        )
+      )}
 
+      {/* Age */}
+      <div>
+        <label className="block text-sm font-semibold">Age</label>
+        <input
+          type="number"
+          name="age"
+          value={profile.age || ""}
+          onChange={handleChange}
+          disabled={!editable}
+          className={`w-full mt-1 p-2 border rounded ${
+            editable ? "bg-white" : "bg-gray-100"
+          } ${errors.age ? "border-red-500" : ""}`}
+        />
+        {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
+      </div>
+
+      {/* Gender */}
+      <div>
+        <label className="block text-sm font-semibold">Gender</label>
+        <input
+          type="text"
+          name="gender"
+          value={profile.gender || ""}
+          onChange={handleChange}
+          disabled={!editable}
+          placeholder="male or female"
+          className={`w-full mt-1 p-2 border rounded ${
+            editable ? "bg-white" : "bg-gray-100"
+          } ${errors.gender ? "border-red-500" : ""}`}
+        />
+        {errors.gender && (
+          <p className="text-red-500 text-sm">{errors.gender}</p>
+        )}
+      </div>
+
+      {/* Buttons */}
       <div className="flex justify-between mt-4 flex-wrap gap-2">
         {editable ? (
           <button
@@ -105,7 +171,7 @@ const Profile = () => {
         </button>
 
         <button
-          onClick={handleDelete}
+          onClick={() => handleDelete(profile)}
           className="bg-red-600 text-white px-4 py-2 rounded"
         >
           Delete Profile

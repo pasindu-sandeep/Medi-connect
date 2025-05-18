@@ -48,41 +48,49 @@ public class GetAllAppointmentsByDateServlet extends HttpServlet {
 
         try (DirectoryStream<Path> files = Files.newDirectoryStream(appointmentsDir)) {
             for (Path file : files) {
-                String content = Files.readString(file);
-                JsonArray userAppointments = JsonParser.parseString(content).getAsJsonArray();
-                String patientUsername = file.getFileName().toString().replace("_appointment.txt", "");
+                try {
+                    if (Files.size(file) == 0) continue; // skip empty
 
-                // Load patient details
-                Path patientFile = Paths.get(baseDir, "patient_data", patientUsername + "_data.txt");
-                String patientName = patientUsername;
-                if (Files.exists(patientFile)) {
-                    try {
-                        Patient patient = gson.fromJson(Files.readString(patientFile), Patient.class);
-                        patientName = patient.nameWithInitials;
-                    } catch (Exception ignored) {}
-                }
+                    String content = Files.readString(file, java.nio.charset.StandardCharsets.UTF_8);
+                    JsonArray userAppointments = JsonParser.parseString(content).getAsJsonArray();
 
-                for (JsonElement appt : userAppointments) {
-                    JsonObject obj = appt.getAsJsonObject();
-                    obj.addProperty("patientUsername", patientUsername);
-                    obj.addProperty("patientName", patientName);
+                    String patientUsername = file.getFileName().toString().replace("_appointment.txt", "");
 
-                    // Load doctor name
-                    String doctorUsername = obj.get("doctorUsername").getAsString();
-                    Path doctorFile = Paths.get(baseDir, "doctor_data", doctorUsername + "_data.txt");
-                    if (Files.exists(doctorFile)) {
+                    // Load patient details
+                    Path patientFile = Paths.get(baseDir, "patient_data", patientUsername + "_data.txt");
+                    String patientName = patientUsername;
+                    if (Files.exists(patientFile) && Files.size(patientFile) > 0) {
                         try {
-                            Doctor doctor = gson.fromJson(Files.readString(doctorFile), Doctor.class);
-                            obj.addProperty("doctorName", doctor.name);
+                            Patient patient = gson.fromJson(Files.readString(patientFile, java.nio.charset.StandardCharsets.UTF_8), Patient.class);
+                            patientName = patient.nameWithInitials;
                         } catch (Exception ignored) {}
                     }
 
-                    allAppointments.add(obj);
+                    for (JsonElement appt : userAppointments) {
+                        JsonObject obj = appt.getAsJsonObject();
+                        obj.addProperty("patientUsername", patientUsername);
+                        obj.addProperty("patientName", patientName);
+
+                        // Load doctor name
+                        String doctorUsername = obj.get("doctorUsername").getAsString();
+                        Path doctorFile = Paths.get(baseDir, "doctor_data", doctorUsername + "_data.txt");
+
+                        if (Files.exists(doctorFile) && Files.size(doctorFile) > 0) {
+                            try {
+                                Doctor doctor = gson.fromJson(Files.readString(doctorFile, java.nio.charset.StandardCharsets.UTF_8), Doctor.class);
+                                obj.addProperty("doctorName", doctor.name);
+                            } catch (Exception ignored) {}
+                        }
+
+                        allAppointments.add(obj);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Skipping invalid appointment file: " + file.getFileName() + " - " + e.getMessage());
                 }
             }
         }
 
-        // Optional: Sort by date
+        // Sort appointments by date
         List<JsonElement> sorted = new ArrayList<>();
         for (JsonElement appt : allAppointments) sorted.add(appt);
 
@@ -93,4 +101,5 @@ public class GetAllAppointmentsByDateServlet extends HttpServlet {
 
         resp.getWriter().write(gson.toJson(sortedArray));
     }
+
 }

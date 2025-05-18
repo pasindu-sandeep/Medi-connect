@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  getHospitalsWithDetails,
+  deleteHospital,
+} from "../../services/hospitalInfoAPI";
 import Sidebar from "../SideBar";
-import { getHospitalsWithDetails } from "../../services/hospitalInfoAPI";
 import { Card, CardContent, CardHeader, CardTitle } from "../molecules/Card";
 import {
   Table,
@@ -11,31 +13,37 @@ import {
   TableHeader,
   TableRow,
 } from "../molecules/Table";
-import {
-  Users,
-  UserCheck,
-  UserX,
-  AlertTriangle,
-  ArrowDownUp,
-  ArrowRight,
-} from "lucide-react";
-import { Badge } from "../atoms/Badge";
+import { Trash2 } from "lucide-react";
 
 const HospitalTable = () => {
-  const [hospitalDetails, sethospitalDetails] = useState([]);
+  const [hospitalDetails, setHospitalDetails] = useState([]);
+
+  const fetchHospitalDetails = async () => {
+    try {
+      const data = await getHospitalsWithDetails();
+      setHospitalDetails(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
-    const fetchHospitalDetails = async () => {
-      try {
-        const data = await getHospitalsWithDetails();
-        sethospitalDetails(data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     fetchHospitalDetails();
   }, []);
+
+  const handleDelete = async (hospitalName) => {
+    const confirmed = window.confirm(`Delete hospital "${hospitalName}"?`);
+    if (!confirmed) return;
+
+    try {
+      await deleteHospital(hospitalName);
+      alert("Hospital deleted successfully.");
+      fetchHospitalDetails(); // Refresh list
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete hospital.");
+    }
+  };
 
   return (
     <div className="flex w-full mb-6">
@@ -48,6 +56,7 @@ const HospitalTable = () => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-10">Delete</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Address</TableHead>
                   <TableHead>Contact</TableHead>
@@ -57,13 +66,20 @@ const HospitalTable = () => {
               <TableBody>
                 {hospitalDetails.map((hospital, index) => (
                   <TableRow key={index}>
+                    <TableCell>
+                      <button
+                        onClick={() => handleDelete(hospital.hospitalName)}
+                        className="text-red-600 hover:text-red-800"
+                        title="Delete hospital"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </TableCell>
                     <TableCell>{hospital.hospitalName}</TableCell>
                     <TableCell>{hospital.address}</TableCell>
                     <TableCell>{hospital.contact}</TableCell>
                     <TableCell>
-                      {hospital.labServices
-                        .map((service) => service.name)
-                        .join(", ")}
+                      {hospital.labServices.map((s) => s.name).join(", ")}
                     </TableCell>
                   </TableRow>
                 ))}

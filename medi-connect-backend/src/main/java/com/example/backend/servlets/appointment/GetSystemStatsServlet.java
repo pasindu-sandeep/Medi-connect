@@ -62,8 +62,15 @@ public class GetSystemStatsServlet extends HttpServlet {
         int total = 0;
         try (DirectoryStream<Path> files = Files.newDirectoryStream(dir)) {
             for (Path file : files) {
-                String content = Files.readString(file);
-                total += new Gson().fromJson(content, com.google.gson.JsonArray.class).size();
+                try {
+                    if (Files.size(file) == 0) continue; // skip empty files
+
+                    String content = Files.readString(file, java.nio.charset.StandardCharsets.UTF_8);
+                    com.google.gson.JsonArray array = new Gson().fromJson(content, com.google.gson.JsonArray.class);
+                    total += array.size();
+                } catch (Exception e) {
+                    System.err.println("Skipping invalid appointment file: " + file.getFileName() + " - " + e.getMessage());
+                }
             }
         } catch (IOException e) {
             return 0;

@@ -29,3 +29,15 @@ export const registerHospital = async (payload) => {
     throw error;
   }
 };
+
+export const deleteHospital = async (hospitalName) => {
+  try {
+    const response = await apiClient.delete("/hospital-delete", {
+      params: { name: hospitalName },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting hospital:", error);
+    throw error;
+  }
+};

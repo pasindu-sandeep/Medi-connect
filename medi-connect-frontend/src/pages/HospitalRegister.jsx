@@ -12,9 +12,7 @@ const toBase64 = (file) =>
   });
 
 const HospitalRegistration = () => {
-  const [previewImage, setPreviewImage] = useState(
-    "https://via.placeholder.com/400x200"
-  );
+  const [previewImage, setPreviewImage] = useState("hospital.png");
   const [formData, setFormData] = useState({
     hospitalName: "",
     address: "",
@@ -23,9 +21,22 @@ const HospitalRegistration = () => {
     labServices: [],
     healthPackages: [],
   });
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.hospitalName.trim())
+      newErrors.hospitalName = "Hospital name is required.";
+    if (!formData.address.trim()) newErrors.address = "Address is required.";
+    if (!formData.contact.trim())
+      newErrors.contact = "Contact number is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleCoverPhotoChange = async (e) => {
@@ -71,6 +82,7 @@ const HospitalRegistration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
 
     const payload = {
       ...formData,
@@ -111,7 +123,7 @@ const HospitalRegistration = () => {
               <img
                 src={previewImage}
                 alt="Cover"
-                className="w-full h-48 object-cover rounded-md border shadow-md"
+                className="w-full h-auto object-cover rounded-md border shadow-md"
               />
             </label>
             <label
@@ -130,6 +142,7 @@ const HospitalRegistration = () => {
           </div>
 
           {/* Hospital Name */}
+          {/* Hospital Name */}
           <div className="relative">
             <Hospital
               className="absolute top-2.5 left-3 text-gray-400"
@@ -141,8 +154,13 @@ const HospitalRegistration = () => {
               value={formData.hospitalName}
               onChange={handleChange}
               placeholder="Hospital Name"
-              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white"
+              className={`w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white ${
+                errors.hospitalName ? "border border-red-500" : ""
+              }`}
             />
+            {errors.hospitalName && (
+              <p className="text-red-500 text-sm mt-1">{errors.hospitalName}</p>
+            )}
           </div>
 
           {/* Address */}
@@ -157,8 +175,13 @@ const HospitalRegistration = () => {
               value={formData.address}
               onChange={handleChange}
               placeholder="Address"
-              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white"
+              className={`w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white ${
+                errors.address ? "border border-red-500" : ""
+              }`}
             />
+            {errors.address && (
+              <p className="text-red-500 text-sm mt-1">{errors.address}</p>
+            )}
           </div>
 
           {/* Contact */}
@@ -173,8 +196,13 @@ const HospitalRegistration = () => {
               value={formData.contact}
               onChange={handleChange}
               placeholder="Contact Number"
-              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white"
+              className={`w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white ${
+                errors.contact ? "border border-red-500" : ""
+              }`}
             />
+            {errors.contact && (
+              <p className="text-red-500 text-sm mt-1">{errors.contact}</p>
+            )}
           </div>
         </div>
 

@@ -1,13 +1,22 @@
 import { useState } from "react";
-import { Camera, Hospital } from "lucide-react";
+import {
+  Camera,
+  Hospital,
+  User,
+  Lock,
+  Phone,
+  Home,
+  UserCircle,
+  VenetianMask,
+  Calendar,
+} from "lucide-react";
 import { registerPatient } from "./../services/patientAPI";
 
-// Utility function to convert image file to base64 string
 const toBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result.split(",")[1]); // remove prefix
+    reader.onload = () => resolve(reader.result.split(",")[1]);
     reader.onerror = (error) => reject(error);
   });
 
@@ -17,16 +26,30 @@ const UserRegistration = () => {
     username: "",
     password: "",
     confirmPassword: "",
-    nameWithInitials: "", // formerly "fullName"
+    nameWithInitials: "",
     phoneNumber: "",
     age: "",
     address: "",
     gender: "",
   });
 
-  const [previewImage, setPreviewImage] = useState(
-    "https://via.placeholder.com/100"
-  );
+  const [errors, setErrors] = useState({});
+  const [previewImage, setPreviewImage] = useState("avatars/male_avatar.png");
+
+  const handleGenderChange = (e) => {
+    const gender = e.target.value;
+    setFormData({ ...formData, gender });
+
+    if (!previewImage.includes("blob:")) {
+      if (gender === "Male") {
+        setPreviewImage("avatars/male_avatar.png");
+      } else if (gender === "Female") {
+        setPreviewImage("avatars/female_avatar.png");
+      } else {
+        setPreviewImage("avatars/male_avatar.png");
+      }
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,12 +60,26 @@ const UserRegistration = () => {
     if (file) {
       const base64 = await toBase64(file);
       setFormData((prev) => ({ ...prev, profilePicture: base64 }));
-      setPreviewImage(URL.createObjectURL(file)); // For preview only
+      setPreviewImage(URL.createObjectURL(file));
     }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+    if (!formData.age || isNaN(formData.age) || Number(formData.age) <= 0) {
+      newErrors.age = "Age must be a positive number";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
 
     try {
       await registerPatient(formData);
@@ -70,7 +107,7 @@ const UserRegistration = () => {
               <img
                 src={previewImage}
                 alt="Profile Preview"
-                className="w-40 h-40 rounded-full border-4 border-white shadow-md object-cover"
+                className="w-50 h-5x0 rounded-full border-4 border-white shadow-md object-cover"
               />
             </label>
             <label
@@ -90,10 +127,7 @@ const UserRegistration = () => {
 
           {/* Username */}
           <div className="relative">
-            <Hospital
-              className="absolute top-2.5 left-3 text-gray-400"
-              size={18}
-            />
+            <User className="absolute top-2.5 left-3 text-gray-400" size={18} />
             <input
               type="text"
               name="username"
@@ -106,10 +140,7 @@ const UserRegistration = () => {
 
           {/* Password */}
           <div className="relative">
-            <Hospital
-              className="absolute top-2.5 left-3 text-gray-400"
-              size={18}
-            />
+            <Lock className="absolute top-2.5 left-3 text-gray-400" size={18} />
             <input
               type="password"
               name="password"
@@ -122,10 +153,7 @@ const UserRegistration = () => {
 
           {/* Confirm Password */}
           <div className="relative">
-            <Hospital
-              className="absolute top-2.5 left-3 text-gray-400"
-              size={18}
-            />
+            <Lock className="absolute top-2.5 left-3 text-gray-400" size={18} />
             <input
               type="password"
               name="confirmPassword"
@@ -134,6 +162,11 @@ const UserRegistration = () => {
               placeholder="Confirm Password"
               className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white"
             />
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.confirmPassword}
+              </p>
+            )}
           </div>
         </div>
 
@@ -146,9 +179,9 @@ const UserRegistration = () => {
             User Details
           </h2>
 
-          {/* Full Name */}
+          {/* Name with Initials */}
           <div className="relative">
-            <Hospital
+            <UserCircle
               className="absolute top-2.5 left-3 text-gray-400"
               size={18}
             />
@@ -162,9 +195,9 @@ const UserRegistration = () => {
             />
           </div>
 
-          {/* Contact Number */}
+          {/* Phone Number */}
           <div className="relative">
-            <Hospital
+            <Phone
               className="absolute top-2.5 left-3 text-gray-400"
               size={18}
             />
@@ -180,7 +213,7 @@ const UserRegistration = () => {
 
           {/* Age */}
           <div className="relative">
-            <Hospital
+            <Calendar
               className="absolute top-2.5 left-3 text-gray-400"
               size={18}
             />
@@ -192,14 +225,14 @@ const UserRegistration = () => {
               placeholder="Age"
               className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white"
             />
+            {errors.age && (
+              <p className="text-red-500 text-sm mt-1">{errors.age}</p>
+            )}
           </div>
 
           {/* Address */}
           <div className="relative">
-            <Hospital
-              className="absolute top-2.5 left-3 text-gray-400"
-              size={18}
-            />
+            <Home className="absolute top-2.5 left-3 text-gray-400" size={18} />
             <input
               type="text"
               name="address"
@@ -212,18 +245,22 @@ const UserRegistration = () => {
 
           {/* Gender */}
           <div className="relative">
-            <Hospital
+            <VenetianMask
               className="absolute top-2.5 left-3 text-gray-400"
               size={18}
             />
-            <input
-              type="text"
+            <select
               name="gender"
               value={formData.gender}
-              onChange={handleChange}
-              placeholder="Gender"
-              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-white"
-            />
+              onChange={handleGenderChange} // <-- This was the missing part
+              className="w-full pl-10 pr-4 py-2 rounded bg-gray-800 text-gray-400 appearance-none"
+            >
+              <option value="" disabled>
+                Select Gender
+              </option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
           </div>
 
           {/* Submit Button */}
