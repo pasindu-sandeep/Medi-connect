@@ -29,6 +29,7 @@ import CartPage from "./pages/CartPage.jsx";
 import { CartProvider } from "./components/CartContext.jsx";
 import Pickup from "./pages/PickupDetails.jsx";
 import HealthMartWrapper from "./pages/HealthMartWrapper.jsx";
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 
 const AppContent = () => {
   const location = useLocation();
@@ -76,7 +77,15 @@ const AppContent = () => {
             <Route path="/about" element={<About />} />
             <Route path="/health-mart" element={<HealthMartWrapper />} />
             <Route path="/health-packages" element={<HealthPackages />} />
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route
+              path="/admin-dashboard"
+              element={
+                <ProtectedAdminRoute>
+                  <AdminDashboard />
+                </ProtectedAdminRoute>
+              }
+            />
+
             <Route path="/user-registration" element={<UserRegistration />} />
             <Route path="/profile/patient" element={<Profile />} />
             <Route path="/profile/doctor" element={<DoctorProfile />} />

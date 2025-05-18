@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { loginUser } from "./../services/loginAPI";
+import { useNavigate } from "react-router-dom";
 
 // Helper to determine user type
 const determineUserType = (user) => {
@@ -13,6 +14,8 @@ const LoginModal = ({ show, onClose }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
+
   if (!show) return null;
 
   const handleLogin = async () => {
@@ -22,23 +25,24 @@ const LoginModal = ({ show, onClose }) => {
     }
 
     if (username == "admin" || password == "admin") {
-      window.location.href = "/admin-dashboard";
-    }
+      sessionStorage.setItem("adminNavigated", "true");
+      navigate("/admin-dashboard");
+    } else {
+      try {
+        const data = await loginUser(username, password);
+        const userType = determineUserType(data);
 
-    try {
-      const data = await loginUser(username, password);
-      const userType = determineUserType(data);
+        const userData = { ...data, userType };
+        localStorage.setItem("user", JSON.stringify(userData));
 
-      const userData = { ...data, userType };
-      localStorage.setItem("user", JSON.stringify(userData));
+        onClose();
 
-      onClose();
-
-      // Redirect based on user type
-      window.location.href =
-        userType === "doctor" ? "/profile/doctor" : "/profile/patient";
-    } catch (err) {
-      alert("Login failed. Please try again.");
+        // Redirect based on user type
+        window.location.href =
+          userType === "doctor" ? "/profile/doctor" : "/profile/patient";
+      } catch (err) {
+        alert("Login failed. Please try again.");
+      }
     }
   };
 

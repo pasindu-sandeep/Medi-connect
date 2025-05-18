@@ -10,16 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4478c5a6-8154-4f57-9660-a050799d02d3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/hospital/HospitalDeleteServlet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/DoctorAppointmentCountServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/DoctorAppointmentCountServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/GetAllAppointmentsByDateServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/GetAllAppointmentsByDateServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/GetSystemStatsServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/GetSystemStatsServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/DoctorRegistrstion.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/DoctorRegistrstion.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/HospitalRegister.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/HospitalRegister.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/Profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/Profile.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/UserRegistration.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/pages/UserRegistration.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../medi-connect-frontend/src/services/patientAPI.js" beforeDir="false" afterPath="$PROJECT_DIR$/../medi-connect-frontend/src/services/patientAPI.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -276,7 +267,8 @@
       <workItem from="1747408662830" duration="315000" />
       <workItem from="1747409002942" duration="1948000" />
       <workItem from="1747466375542" duration="21705000" />
-      <workItem from="1747568181562" duration="4218000" />
+      <workItem from="1747568181562" duration="4828000" />
+      <workItem from="1747579637791" duration="1195000" />
     </task>
     <servers />
   </component>

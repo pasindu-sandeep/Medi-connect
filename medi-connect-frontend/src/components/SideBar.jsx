@@ -56,6 +56,7 @@ const SideBar = ({ onSelectView }) => {
       <div className="absolute bottom-0 left-0 w-full p-4 border-t bg-white">
         <button
           onClick={() => {
+            sessionStorage.setItem("adminNavigated", "true");
             // Add your logout logic here
             if (typeof window !== "undefined") {
               localStorage.clear();
