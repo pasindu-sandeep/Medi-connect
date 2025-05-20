@@ -1,16 +1,29 @@
 package com.example.backend.models;
 
 public class Doctor extends User {
-    public String Specialization;
-    public String doctorID;
+    private String Specialization;
+    private String doctorID;
 
     public void Doctor(String username, String password, String name, String phoneNumber, String specialization, String profilePicture, String doctorID) {
-      this.username = username;
-      this.password = password;
-      this.name = name;
-      this.phoneNumber = phoneNumber;
+      this.setUsername(username);
+      this.setPassword(password);
+      this.setName(name);
+      this.setPhoneNumber(phoneNumber);
       this.Specialization = specialization;
-      this.profilePicture = profilePicture;
+      this.setProfilePicture(profilePicture);
       this.doctorID = doctorID;
+    }
+
+    public String getSpecialization() {
+        return Specialization;
+    }
+    public void setSpecialization(String specialization) {
+        Specialization = specialization;
+    }
+    public String getDoctorID() {
+        return doctorID;
+    }
+    public void setDoctorID(String doctorID) {
+        this.doctorID = doctorID;
     }
 }

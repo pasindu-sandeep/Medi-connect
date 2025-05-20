@@ -47,8 +47,8 @@ public class RegisterServlet extends HttpServlet {
         Gson gson = new Gson();
         Patient patient = gson.fromJson(reader, Patient.class);
 
-        Path patientFile = Paths.get(baseDir, "patient_data", patient.username + "_data.txt");
-        Path doctorFile = Paths.get(baseDir, "doctor_data", patient.username + "_data.txt");
+        Path patientFile = Paths.get(baseDir, "patient_data", patient.getUsername() + "_data.txt");
+        Path doctorFile = Paths.get(baseDir, "doctor_data", patient.getUsername() + "_data.txt");
 
         // ✅ Check if username already exists (as doctor or patient)
         if (Files.exists(patientFile) || Files.exists(doctorFile)) {

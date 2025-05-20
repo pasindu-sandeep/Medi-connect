@@ -31,7 +31,7 @@ public class HospitalListServlet extends HttpServlet {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(hospitalDataPath), "*_data.txt")) {
             for (Path file : stream) {
                 Hospital h = gson.fromJson(Files.readString(file), Hospital.class);
-                hospitalNames.add(h.hospitalName);
+                hospitalNames.add(h.getHospitalName());
             }
         }
 

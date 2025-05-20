@@ -51,16 +51,16 @@ public class LoginServlet extends HttpServlet {
         Path doctorFile = Paths.get(doctorDataPath, username + "_data.txt");
         if (Files.exists(doctorFile)) {
             Doctor doctor = gson.fromJson(Files.readString(doctorFile), Doctor.class);
-            if (doctor.password.equals(password)) {
+            if (doctor.getPassword().equals(password)) {
                 JsonObject result = new JsonObject();
-                result.addProperty("nameWithInitials", doctor.name);
+                result.addProperty("nameWithInitials", doctor.getName());
                 result.addProperty("age", 0); // default if not in file
                 result.addProperty("gender", "unknown");
                 result.addProperty("address", "unknown");
-                result.addProperty("username", doctor.username);
-                result.addProperty("password", doctor.password);
-                result.addProperty("phoneNumber", doctor.phoneNumber);
-                result.addProperty("profilePicture", doctor.profilePicture);
+                result.addProperty("username", doctor.getUsername());
+                result.addProperty("password", doctor.getPassword());
+                result.addProperty("phoneNumber", doctor.getPhoneNumber());
+                result.addProperty("profilePicture", doctor.getProfilePicture());
                 result.addProperty("role", "doctor");
 
                 resp.getWriter().write(gson.toJson(result));
@@ -72,16 +72,16 @@ public class LoginServlet extends HttpServlet {
         Path patientFile = Paths.get(patientDataPath, username + "_data.txt");
         if (Files.exists(patientFile)) {
             Patient patient = gson.fromJson(Files.readString(patientFile), Patient.class);
-            if (patient.password.equals(password)) {
+            if (patient.getPassword().equals(password)) {
                 JsonObject result = new JsonObject();
-                result.addProperty("nameWithInitials", patient.nameWithInitials);
-                result.addProperty("age", patient.age);
-                result.addProperty("gender", patient.gender);
-                result.addProperty("address", patient.address);
-                result.addProperty("username", patient.username);
-                result.addProperty("password", patient.password);
-                result.addProperty("phoneNumber", patient.phoneNumber);
-                result.addProperty("profilePicture", patient.profilePicture);
+                result.addProperty("nameWithInitials", patient.getNameWithInitialsPatient());
+                result.addProperty("age", patient.getAgePatient());
+                result.addProperty("gender", patient.getGenderPatient());
+                result.addProperty("address", patient.getAddressPatient());
+                result.addProperty("username", patient.getUsername());
+                result.addProperty("password", patient.getPassword());
+                result.addProperty("phoneNumber", patient.getPhoneNumber());
+                result.addProperty("profilePicture", patient.getProfilePicture());
                 result.addProperty("role", "patient");
 
                 resp.getWriter().write(gson.toJson(result));

@@ -62,7 +62,7 @@ public class GetAllAppointmentsByDateServlet extends HttpServlet {
                     if (Files.exists(patientFile) && Files.size(patientFile) > 0) {
                         try {
                             Patient patient = gson.fromJson(Files.readString(patientFile, java.nio.charset.StandardCharsets.UTF_8), Patient.class);
-                            patientName = patient.nameWithInitials;
+                            patientName = patient.getNameWithInitialsPatient();
                         } catch (Exception ignored) {}
                     }
 
@@ -78,7 +78,7 @@ public class GetAllAppointmentsByDateServlet extends HttpServlet {
                         if (Files.exists(doctorFile) && Files.size(doctorFile) > 0) {
                             try {
                                 Doctor doctor = gson.fromJson(Files.readString(doctorFile, java.nio.charset.StandardCharsets.UTF_8), Doctor.class);
-                                obj.addProperty("doctorName", doctor.name);
+                                obj.addProperty("doctorName", doctor.getName());
                             } catch (Exception ignored) {}
                         }
 

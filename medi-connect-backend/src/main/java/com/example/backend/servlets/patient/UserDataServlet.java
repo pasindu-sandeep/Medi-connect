@@ -49,7 +49,7 @@ public class UserDataServlet extends HttpServlet {
 
         String content = Files.readString(patientFilePath);
         Patient patient = new Gson().fromJson(content, Patient.class);
-        patient.password = null; // Hide password
+        patient.setPassword(null);
 
         resp.getWriter().write(new Gson().toJson(patient));
     }

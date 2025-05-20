@@ -24,8 +24,8 @@ public class DoctorListServlet extends HttpServlet {
                 Doctor doc = gson.fromJson(content, Doctor.class);
 
                 Map<String, String> entry = new HashMap<>();
-                entry.put("name", doc.name);
-                entry.put("specialization", doc.Specialization);
+                entry.put("name", doc.getName());
+                entry.put("specialization", doc.getSpecialization());
                 result.add(entry);
             }
         }

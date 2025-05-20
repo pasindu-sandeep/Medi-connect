@@ -69,13 +69,13 @@ public class DoctorScheduleServlet extends HttpServlet {
 
     private List<DoctorSchedule.Availability> getAvailabilityForDay(DoctorSchedule sched, String dayName) {
         return switch (dayName.toUpperCase()) {
-            case "MONDAY" -> sched.availabilityList_Monday;
-            case "TUESDAY" -> sched.availabilityList_Tuesday;
-            case "WEDNESDAY" -> sched.availabilityList_Wednesday;
-            case "THURSDAY" -> sched.availabilityList_Thurs;
-            case "FRIDAY" -> sched.availabilityList_Friday;
-            case "SATURDAY" -> sched.availabilityList_Saturday;
-            case "SUNDAY" -> sched.availabilityList_Sunday;
+            case "MONDAY" -> sched.getAvailabilityList_Monday();
+            case "TUESDAY" -> sched.getAvailabilityList_Tuesday();
+            case "WEDNESDAY" -> sched.getAvailabilityList_Wednesday();
+            case "THURSDAY" -> sched.getAvailabilityList_Thurs();
+            case "FRIDAY" -> sched.getAvailabilityList_Friday();
+            case "SATURDAY" -> sched.getAvailabilityList_Saturday();
+            case "SUNDAY" -> sched.getAvailabilityList_Sunday();
             default -> Collections.emptyList();
         };
     }

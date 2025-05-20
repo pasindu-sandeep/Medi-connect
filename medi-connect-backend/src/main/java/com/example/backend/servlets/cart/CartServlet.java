@@ -42,13 +42,13 @@ public class CartServlet extends HttpServlet {
 
         CartItemRequest itemRequest = gson.fromJson(req.getReader(), CartItemRequest.class);
 
-        if (itemRequest == null || itemRequest.username == null || itemRequest.item == null) {
+        if (itemRequest == null || itemRequest.getUsername() == null || itemRequest.getItem() == null) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().write("{\"error\":\"Invalid request\"}");
             return;
         }
 
-        Path cartFile = Paths.get(baseDir, "cart_data", itemRequest.username + "_cart.txt");
+        Path cartFile = Paths.get(baseDir, "cart_data", itemRequest.getUsername() + "_cart.txt");
 
         List<Map<String, Object>> cart = new ArrayList<>();
         if (Files.exists(cartFile)) {
@@ -62,9 +62,9 @@ public class CartServlet extends HttpServlet {
         // Update or add item
         boolean updated = false;
         for (Map<String, Object> item : cart) {
-            if (item.get("sku").equals(itemRequest.item.get("sku"))) {
+            if (item.get("sku").equals(itemRequest.getItem().get("sku"))) {
                 Object existingQtyObj = item.get("qty");
-                Object newQtyObj = itemRequest.item.get("qty");
+                Object newQtyObj = itemRequest.getItem().get("qty");
 
                 double existingQty = existingQtyObj instanceof Number ? ((Number) existingQtyObj).doubleValue() : 0;
                 double newQty = newQtyObj instanceof Number ? ((Number) newQtyObj).doubleValue() : 0;
@@ -76,7 +76,7 @@ public class CartServlet extends HttpServlet {
         }
 
         if (!updated) {
-            cart.add(itemRequest.item);
+            cart.add(itemRequest.getItem());
         }
 
         // Save to file

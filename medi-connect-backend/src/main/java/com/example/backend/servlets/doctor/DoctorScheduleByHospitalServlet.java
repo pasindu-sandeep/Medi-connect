@@ -51,13 +51,13 @@ public class DoctorScheduleByHospitalServlet extends HttpServlet {
 
         // Iterate over all days
         Map<String, List<DoctorSchedule.Availability>> fullSchedule = Map.of(
-                "MONDAY", schedule.availabilityList_Monday,
-                "TUESDAY", schedule.availabilityList_Tuesday,
-                "WEDNESDAY", schedule.availabilityList_Wednesday,
-                "THURSDAY", schedule.availabilityList_Thurs,
-                "FRIDAY", schedule.availabilityList_Friday,
-                "SATURDAY", schedule.availabilityList_Saturday,
-                "SUNDAY", schedule.availabilityList_Sunday
+                "MONDAY", schedule.getAvailabilityList_Monday(),
+                "TUESDAY", schedule.getAvailabilityList_Tuesday(),
+                "WEDNESDAY", schedule.getAvailabilityList_Wednesday(),
+                "THURSDAY", schedule.getAvailabilityList_Thurs(),
+                "FRIDAY", schedule.getAvailabilityList_Friday(),
+                "SATURDAY", schedule.getAvailabilityList_Saturday(),
+                "SUNDAY", schedule.getAvailabilityList_Sunday()
         );
 
         for (Map.Entry<String, List<DoctorSchedule.Availability>> entry : fullSchedule.entrySet()) {

@@ -34,7 +34,7 @@ public class UploadDoctorReportServlet extends HttpServlet {
 
         try {
             DoctorVisitReport report = gson.fromJson(req.getReader(), DoctorVisitReport.class);
-            Path reportFile = Paths.get(baseDir, "patient_data", report.patientUsername + "_reports.txt");
+            Path reportFile = Paths.get(baseDir, "patient_data", report.getPatientUsername() + "_reports.txt");
 
             // Convert to JSON and append
             try (BufferedWriter writer = Files.newBufferedWriter(reportFile,

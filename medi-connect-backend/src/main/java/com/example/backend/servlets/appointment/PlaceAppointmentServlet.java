@@ -35,9 +35,9 @@ public class PlaceAppointmentServlet extends HttpServlet {
         Gson gson = new Gson();
         Appointment appointment = gson.fromJson(req.getReader(), Appointment.class);
 
-        LocalDate targetDate = LocalDate.parse(appointment.date);
+        LocalDate targetDate = LocalDate.parse(appointment.getDate());
         String day = targetDate.getDayOfWeek().name().toLowerCase(); // e.g., "monday"
-        Path slotFilePath = Paths.get(baseDir, "doctor_data", appointment.doctorUsername + "_timeSlots", day);
+        Path slotFilePath = Paths.get(baseDir, "doctor_data", appointment.getDoctorUsername() + "_timeSlots", day);
 
         if (!Files.exists(slotFilePath)) {
             resp.setStatus(404);
@@ -51,10 +51,10 @@ public class PlaceAppointmentServlet extends HttpServlet {
         for (JsonElement element : hospitalBlocks) {
             JsonObject hospitalMap = element.getAsJsonObject();
 
-            if (hospitalMap.has(appointment.hospitalName)) {
-                JsonObject slotData = hospitalMap.get(appointment.hospitalName).getAsJsonObject();
+            if (hospitalMap.has(appointment.getHospitalName())) {
+                JsonObject slotData = hospitalMap.get(appointment.getHospitalName()).getAsJsonObject();
 
-                if (!slotData.get("time_slot").getAsString().equals(appointment.timeSlot)) continue;
+                if (!slotData.get("time_slot").getAsString().equals(appointment.getTimeSlot())) continue;
 
                 // 🧹 Clear all previous appointments and start fresh for new date
                 JsonArray currentAppointments = slotData.getAsJsonArray("appointments");
@@ -63,7 +63,7 @@ public class PlaceAppointmentServlet extends HttpServlet {
                 // Retain only appointments with same date
                 for (JsonElement apptEl : currentAppointments) {
                     JsonObject appt = apptEl.getAsJsonObject();
-                    if (appt.has("date") && appointment.date.equals(appt.get("date").getAsString())) {
+                    if (appt.has("date") && appointment.getDate().equals(appt.get("date").getAsString())) {
                         newAppointmentsList.add(appt);
                     }
                 }
@@ -71,7 +71,7 @@ public class PlaceAppointmentServlet extends HttpServlet {
                 // 🔁 Check for duplicate for same patient and date
                 for (JsonElement app : newAppointmentsList) {
                     if (app.getAsJsonObject().get("patient_username").getAsString()
-                            .equals(appointment.patientUsername)) {
+                            .equals(appointment.getPatientUsername())) {
                         resp.setStatus(409);
                         resp.getWriter().write("{\"error\":\"Appointment already exists for this patient on this date.\"}");
                         return;
@@ -80,10 +80,10 @@ public class PlaceAppointmentServlet extends HttpServlet {
 
                 // ✅ Add new appointment
                 JsonObject newAppt = new JsonObject();
-                newAppt.addProperty("patient_username", appointment.patientUsername);
-                newAppt.addProperty("urgency", appointment.urgency);
+                newAppt.addProperty("patient_username", appointment.getPatientUsername());
+                newAppt.addProperty("urgency", appointment.getUrgency());
                 newAppt.addProperty("booking_dateTime", System.currentTimeMillis());
-                newAppt.addProperty("date", appointment.date);
+                newAppt.addProperty("date", appointment.getDate());
                 newAppointmentsList.add(newAppt);
 
                 // 🔽 Sort using quick sort
@@ -99,7 +99,7 @@ public class PlaceAppointmentServlet extends HttpServlet {
                 slotData.addProperty("next_time_slot", calculateNextTime(slotData.get("time_slot").getAsString(), sortedAppointments.size()));
 
                 // 📁 Save patient appointment history
-                Path userAppointmentFile = Paths.get(baseDir, "appointments", appointment.patientUsername + "_appointment.txt");
+                Path userAppointmentFile = Paths.get(baseDir, "appointments", appointment.getPatientUsername() + "_appointment.txt");
                 JsonArray userAppointments;
                 if (Files.exists(userAppointmentFile)) {
                     userAppointments = JsonParser.parseString(Files.readString(userAppointmentFile)).getAsJsonArray();
@@ -109,11 +109,11 @@ public class PlaceAppointmentServlet extends HttpServlet {
                 }
 
                 JsonObject userApptEntry = new JsonObject();
-                userApptEntry.addProperty("doctorUsername", appointment.doctorUsername);
-                userApptEntry.addProperty("hospitalName", appointment.hospitalName);
-                userApptEntry.addProperty("timeSlot", appointment.timeSlot);
-                userApptEntry.addProperty("date", appointment.date);
-                userApptEntry.addProperty("urgency", appointment.urgency);
+                userApptEntry.addProperty("doctorUsername", appointment.getDoctorUsername());
+                userApptEntry.addProperty("hospitalName", appointment.getHospitalName());
+                userApptEntry.addProperty("timeSlot", appointment.getTimeSlot());
+                userApptEntry.addProperty("date", appointment.getDate());
+                userApptEntry.addProperty("urgency", appointment.getUrgency());
                 userApptEntry.addProperty("status", "booked");
                 userApptEntry.addProperty("bookedAt", System.currentTimeMillis());
 

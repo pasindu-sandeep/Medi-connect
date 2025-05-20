@@ -74,7 +74,7 @@ public class DoctorAppointmentCountServlet extends HttpServlet {
                     if (Files.size(doctorFile) > 0) {
                         String doctorContent = Files.readString(doctorFile, StandardCharsets.UTF_8);
                         Doctor doctor = gson.fromJson(doctorContent, Doctor.class);
-                        doctorNames.put(username, doctor.name);
+                        doctorNames.put(username, doctor.getUsername());
                     } else {
                         doctorNames.put(username, username); // fallback to username
                     }

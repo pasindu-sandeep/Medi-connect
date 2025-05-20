@@ -43,7 +43,7 @@ public class HospitalRegisterServlet extends HttpServlet {
         Hospital hospital = gson.fromJson(reader, Hospital.class);
 
         // Normalize file name: remove spaces, lowercase
-        String safeName = hospital.hospitalName.replaceAll("\\s+", "_").toLowerCase();
+        String safeName = hospital.getHospitalName().replaceAll("\\s+", "_").toLowerCase();
         Path hospitalFilePath = Paths.get(hospitalDataPath, safeName + "_data.txt");
 
         if (Files.exists(hospitalFilePath)) {

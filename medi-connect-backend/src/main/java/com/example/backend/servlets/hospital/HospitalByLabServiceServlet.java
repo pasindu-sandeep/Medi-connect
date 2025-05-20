@@ -40,10 +40,10 @@ public class HospitalByLabServiceServlet extends HttpServlet {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(hospitalDataPath), "*_data.txt")) {
             for (Path file : stream) {
                 Hospital h = gson.fromJson(Files.readString(file), Hospital.class);
-                if (h.labServices != null) {
-                    for (Hospital.LabService lab : h.labServices) {
-                        if (lab.name.equalsIgnoreCase(service)) {
-                            matchedHospitals.add(h.hospitalName);
+                if (h.getLabServices() != null) {
+                    for (Hospital.LabService lab : h.getLabServices()) {
+                        if (lab.getName().equalsIgnoreCase(service)) {
+                            matchedHospitals.add(h.getHospitalName());
                             break;
                         }
                     }

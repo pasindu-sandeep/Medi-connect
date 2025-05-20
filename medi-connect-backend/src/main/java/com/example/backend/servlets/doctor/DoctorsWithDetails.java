@@ -56,20 +56,20 @@ public class DoctorsWithDetails extends HttpServlet {
                 if (Files.exists(scheduleFile)) {
                     DoctorSchedule schedule = gson.fromJson(Files.readString(scheduleFile), DoctorSchedule.class);
 
-                    if (schedule.availabilityList_Monday != null)
-                        groupedAvailability.put("Monday", schedule.availabilityList_Monday);
-                    if (schedule.availabilityList_Tuesday != null)
-                        groupedAvailability.put("Tuesday", schedule.availabilityList_Tuesday);
-                    if (schedule.availabilityList_Wednesday != null)
-                        groupedAvailability.put("Wednesday", schedule.availabilityList_Wednesday);
-                    if (schedule.availabilityList_Thurs != null)
-                        groupedAvailability.put("Thursday", schedule.availabilityList_Thurs);
-                    if (schedule.availabilityList_Friday != null)
-                        groupedAvailability.put("Friday", schedule.availabilityList_Friday);
-                    if (schedule.availabilityList_Saturday != null)
-                        groupedAvailability.put("Saturday", schedule.availabilityList_Saturday);
-                    if (schedule.availabilityList_Sunday != null)
-                        groupedAvailability.put("Sunday", schedule.availabilityList_Sunday);
+                    if (schedule.getAvailabilityList_Monday() != null)
+                        groupedAvailability.put("Monday", schedule.getAvailabilityList_Monday());
+                    if (schedule.getAvailabilityList_Tuesday() != null)
+                        groupedAvailability.put("Tuesday", schedule.getAvailabilityList_Tuesday());
+                    if (schedule.getAvailabilityList_Wednesday() != null)
+                        groupedAvailability.put("Wednesday", schedule.getAvailabilityList_Wednesday());
+                    if (schedule.getAvailabilityList_Thurs() != null)
+                        groupedAvailability.put("Thursday", schedule.getAvailabilityList_Thurs());
+                    if (schedule.getAvailabilityList_Friday() != null)
+                        groupedAvailability.put("Friday", schedule.getAvailabilityList_Friday());
+                    if (schedule.getAvailabilityList_Saturday() != null)
+                        groupedAvailability.put("Saturday", schedule.getAvailabilityList_Saturday());
+                    if (schedule.getAvailabilityList_Sunday() != null)
+                        groupedAvailability.put("Sunday", schedule.getAvailabilityList_Sunday());
                 }
 
                 responseList.add(new DoctorDetailsResponse(doctor, groupedAvailability));

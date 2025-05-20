@@ -27,8 +27,8 @@ public class DeleteAppointmentServlet extends HttpServlet {
 
         boolean success = false;
 
-        // 1. Remove from patient's appointment file
-        Path patientFile = Paths.get(baseDir, "appointments", appt.patientUsername + "_appointment.txt");
+        // Remove from patient's appointment file
+        Path patientFile = Paths.get(baseDir, "appointments", appt.getPatientUsername() + "_appointment.txt");
 
         if (Files.exists(patientFile)) {
             JsonArray patientAppointments = JsonParser.parseString(Files.readString(patientFile)).getAsJsonArray();
@@ -36,9 +36,9 @@ public class DeleteAppointmentServlet extends HttpServlet {
 
             for (JsonElement el : patientAppointments) {
                 JsonObject obj = el.getAsJsonObject();
-                if (!(obj.get("doctorUsername").getAsString().equals(appt.doctorUsername)
-                        && obj.get("date").getAsString().equals(appt.date)
-                        && obj.get("timeSlot").getAsString().equals(appt.timeSlot))) {
+                if (!(obj.get("doctorUsername").getAsString().equals(appt.getDoctorUsername())
+                        && obj.get("date").getAsString().equals(appt.getDate())
+                        && obj.get("timeSlot").getAsString().equals(appt.getTimeSlot()))) {
                     updatedArray.add(obj);
                 }
             }
@@ -48,25 +48,25 @@ public class DeleteAppointmentServlet extends HttpServlet {
         }
 
         // 2. Remove from doctor's slot file
-        String day = LocalDate.parse(appt.date).getDayOfWeek().name().toLowerCase();
-        Path doctorSlotFile = Paths.get(baseDir, "doctor_data", appt.doctorUsername + "_timeSlots", day);
+        String day = LocalDate.parse(appt.getDate()).getDayOfWeek().name().toLowerCase();
+        Path doctorSlotFile = Paths.get(baseDir, "doctor_data", appt.getDoctorUsername() + "_timeSlots", day);
 
         if (Files.exists(doctorSlotFile)) {
             JsonArray hospitalBlocks = JsonParser.parseString(Files.readString(doctorSlotFile)).getAsJsonArray();
 
             for (JsonElement element : hospitalBlocks) {
                 JsonObject hospitalMap = element.getAsJsonObject();
-                if (hospitalMap.has(appt.hospitalName)) {
-                    JsonObject slotData = hospitalMap.get(appt.hospitalName).getAsJsonObject();
+                if (hospitalMap.has(appt.getHospitalName())) {
+                    JsonObject slotData = hospitalMap.get(appt.getHospitalName()).getAsJsonObject();
 
-                    if (slotData.get("time_slot").getAsString().equals(appt.timeSlot)) {
+                    if (slotData.get("time_slot").getAsString().equals(appt.getTimeSlot())) {
                         JsonArray appts = slotData.getAsJsonArray("appointments");
                         JsonArray updated = new JsonArray();
 
                         for (JsonElement e : appts) {
                             JsonObject a = e.getAsJsonObject();
-                            if (!(a.get("patient_username").getAsString().equals(appt.patientUsername)
-                                    && a.get("date").getAsString().equals(appt.date))) {
+                            if (!(a.get("patient_username").getAsString().equals(appt.getPatientUsername())
+                                    && a.get("date").getAsString().equals(appt.getDate()))) {
                                 updated.add(a);
                             }
                         }

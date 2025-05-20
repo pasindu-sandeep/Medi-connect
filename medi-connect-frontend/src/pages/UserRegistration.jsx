@@ -82,10 +82,15 @@ const UserRegistration = () => {
     if (!validateForm()) return;
 
     try {
-      await registerPatient(formData);
+      const response = await registerPatient(formData);
       alert("User registered successfully!");
     } catch (error) {
-      alert("Registration failed. Please try again.");
+      const errorMessage =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.message ||
+        "Unknown error occurred.";
+      alert("Registration failed: " + errorMessage);
     }
   };
 

@@ -55,13 +55,13 @@ public class DoctorFilterServlet extends HttpServlet {
 
                 // Null-safe collection of all day availabilities
                 List<List<DoctorSchedule.Availability>> allDays = new ArrayList<>();
-                if (schedule.availabilityList_Monday != null) allDays.add(schedule.availabilityList_Monday);
-                if (schedule.availabilityList_Tuesday != null) allDays.add(schedule.availabilityList_Tuesday);
-                if (schedule.availabilityList_Wednesday != null) allDays.add(schedule.availabilityList_Wednesday);
-                if (schedule.availabilityList_Thurs != null) allDays.add(schedule.availabilityList_Thurs);
-                if (schedule.availabilityList_Friday != null) allDays.add(schedule.availabilityList_Friday);
-                if (schedule.availabilityList_Saturday != null) allDays.add(schedule.availabilityList_Saturday);
-                if (schedule.availabilityList_Sunday != null) allDays.add(schedule.availabilityList_Sunday);
+                if (schedule.getAvailabilityList_Monday() != null) allDays.add(schedule.getAvailabilityList_Monday());
+                if (schedule.getAvailabilityList_Tuesday() != null) allDays.add(schedule.getAvailabilityList_Tuesday());
+                if (schedule.getAvailabilityList_Wednesday() != null) allDays.add(schedule.getAvailabilityList_Wednesday());
+                if (schedule.getAvailabilityList_Thurs() != null) allDays.add(schedule.getAvailabilityList_Thurs());
+                if (schedule.getAvailabilityList_Friday() != null) allDays.add(schedule.getAvailabilityList_Friday());
+                if (schedule.getAvailabilityList_Saturday() != null) allDays.add(schedule.getAvailabilityList_Saturday());
+                if (schedule.getAvailabilityList_Sunday() != null) allDays.add(schedule.getAvailabilityList_Sunday());
 
                 for (List<DoctorSchedule.Availability> dayList : allDays) {
                     for (DoctorSchedule.Availability slot : dayList) {
@@ -76,17 +76,17 @@ public class DoctorFilterServlet extends HttpServlet {
                 }
 
                 boolean matchesSpecialization = (specializationFilter == null) ||
-                        (doctor.Specialization != null &&
-                                doctor.Specialization.toLowerCase().contains(specializationFilter.toLowerCase()));
+                        (doctor.getSpecialization() != null &&
+                                doctor.getSpecialization().toLowerCase().contains(specializationFilter.toLowerCase()));
 
                 if ((hospitalFilter == null || matchesHospital) && matchesSpecialization) {
                     Map<String, Object> result = new HashMap<>();
-                    result.put("username", doctor.username);
-                    result.put("name", doctor.name);
-                    result.put("specialization", doctor.Specialization);
-                    result.put("phoneNumber", doctor.phoneNumber);
-                    result.put("profilePicture", doctor.profilePicture);
-                    result.put("doctorID", doctor.doctorID);
+                    result.put("username", doctor.getUsername());
+                    result.put("name", doctor.getName());
+                    result.put("specialization", doctor.getSpecialization());
+                    result.put("phoneNumber", doctor.getPhoneNumber());
+                    result.put("profilePicture", doctor.getProfilePicture());
+                    result.put("doctorID", doctor.getDoctorID());
                     matchingDoctors.add(result);
                 }
             }

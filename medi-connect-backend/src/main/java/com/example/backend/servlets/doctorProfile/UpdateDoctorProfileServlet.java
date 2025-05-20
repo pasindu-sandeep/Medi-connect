@@ -48,8 +48,8 @@ public class UpdateDoctorProfileServlet extends HttpServlet {
         Doctor doctor = gson.fromJson(gson.toJson(payload.get("doctor")), Doctor.class);
         DoctorSchedule schedule = gson.fromJson(gson.toJson(payload.get("schedule")), DoctorSchedule.class);
 
-        Path profilePath = Paths.get(doctorDataPath, doctor.username + "_data.txt");
-        Path schedulePath = Paths.get(doctorDataPath, doctor.username + "_schedule.txt");
+        Path profilePath = Paths.get(doctorDataPath, doctor.getUsername() + "_data.txt");
+        Path schedulePath = Paths.get(doctorDataPath, doctor.getUsername() + "_schedule.txt");
 
         if (!Files.exists(profilePath)) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
