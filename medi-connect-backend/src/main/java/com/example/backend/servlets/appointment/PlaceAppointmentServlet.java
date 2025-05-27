@@ -36,7 +36,7 @@ public class PlaceAppointmentServlet extends HttpServlet {
         Appointment appointment = gson.fromJson(req.getReader(), Appointment.class);
 
         LocalDate targetDate = LocalDate.parse(appointment.getDate());
-        String day = targetDate.getDayOfWeek().name().toLowerCase(); // e.g., "monday"
+        String day = targetDate.getDayOfWeek().name().toLowerCase();
         Path slotFilePath = Paths.get(baseDir, "doctor_data", appointment.getDoctorUsername() + "_timeSlots", day);
 
         if (!Files.exists(slotFilePath)) {
@@ -56,7 +56,6 @@ public class PlaceAppointmentServlet extends HttpServlet {
 
                 if (!slotData.get("time_slot").getAsString().equals(appointment.getTimeSlot())) continue;
 
-                // 🧹 Clear all previous appointments and keep only for current date
                 JsonArray currentAppointments = slotData.getAsJsonArray("appointments");
                 JsonArray newAppointmentsList = new JsonArray();
 
@@ -67,7 +66,6 @@ public class PlaceAppointmentServlet extends HttpServlet {
                     }
                 }
 
-                // Check for duplicate for same patient and date
                 for (JsonElement app : newAppointmentsList) {
                     if (app.getAsJsonObject().get("patient_username").getAsString()
                             .equals(appointment.getPatientUsername())) {
@@ -77,7 +75,6 @@ public class PlaceAppointmentServlet extends HttpServlet {
                     }
                 }
 
-                // Add new appointment
                 JsonObject newAppt = new JsonObject();
                 newAppt.addProperty("patient_username", appointment.getPatientUsername());
                 newAppt.addProperty("urgency", appointment.getUrgency());
@@ -85,11 +82,10 @@ public class PlaceAppointmentServlet extends HttpServlet {
                 newAppt.addProperty("date", appointment.getDate());
                 newAppointmentsList.add(newAppt);
 
-                // Sort using PriorityQueue
                 List<JsonObject> tempList = new ArrayList<>();
                 for (JsonElement e : newAppointmentsList) tempList.add(e.getAsJsonObject());
 
-                Queue<JsonObject> sortedQueue = sortByUrgencyUsingPriorityQueue(tempList);
+                Queue<JsonObject> sortedQueue = bubbleSortByUrgencyUsingQueue(tempList);
                 JsonArray sortedAppointments = new JsonArray();
                 while (!sortedQueue.isEmpty()) {
                     sortedAppointments.add(sortedQueue.poll());
@@ -99,7 +95,6 @@ public class PlaceAppointmentServlet extends HttpServlet {
                 slotData.addProperty("number_of_bookings", sortedAppointments.size());
                 slotData.addProperty("next_time_slot", calculateNextTime(slotData.get("time_slot").getAsString(), sortedAppointments.size()));
 
-                // 📁 Save patient appointment history
                 Path userAppointmentFile = Paths.get(baseDir, "appointments", appointment.getPatientUsername() + "_appointment.txt");
                 JsonArray userAppointments;
                 if (Files.exists(userAppointmentFile)) {
@@ -142,18 +137,21 @@ public class PlaceAppointmentServlet extends HttpServlet {
         return next.toString();
     }
 
-    private Queue<JsonObject> sortByUrgencyUsingPriorityQueue(List<JsonObject> appointmentList) {
-        PriorityQueue<JsonObject> pq = new PriorityQueue<>(
-                (a, b) -> Integer.compare(b.get("urgency").getAsInt(), a.get("urgency").getAsInt())
-        );
+    private Queue<JsonObject> bubbleSortByUrgencyUsingQueue(List<JsonObject> appointmentList) {
+        Queue<JsonObject> queue = new LinkedList<>(appointmentList);
+        List<JsonObject> tempList = new ArrayList<>(queue);
 
-        pq.addAll(appointmentList);
-
-        Queue<JsonObject> sortedQueue = new LinkedList<>();
-        while (!pq.isEmpty()) {
-            sortedQueue.add(pq.poll());
+        int n = tempList.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                int urgency1 = tempList.get(j).get("urgency").getAsInt();
+                int urgency2 = tempList.get(j + 1).get("urgency").getAsInt();
+                if (urgency1 < urgency2) {
+                    Collections.swap(tempList, j, j + 1);
+                }
+            }
         }
 
-        return sortedQueue;
+        return new LinkedList<>(tempList); // Return sorted queue
     }
 }
