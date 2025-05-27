@@ -11,35 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4478c5a6-8154-4f57-9660-a050799d02d3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/models/Appointment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/models/Appointment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/models/CartItemRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/models/CartItemRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/models/Doctor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/models/Doctor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/models/DoctorRegistrationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/models/DoctorRegistrationRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/models/DoctorSchedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/models/DoctorSchedule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/models/DoctorVisitReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/models/DoctorVisitReport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/models/Hospital.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/models/Hospital.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/models/Patient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/models/Patient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/models/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/models/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/LoginServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/LoginServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/DeleteAppointmentServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/DeleteAppointmentServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/DoctorAppointmentCountServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/DoctorAppointmentCountServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/GetAllAppointmentsByDateServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/GetAllAppointmentsByDateServlet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/PlaceAppointmentServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/appointment/PlaceAppointmentServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/cart/CartServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/cart/CartServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorFilterServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorFilterServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorInfoServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorInfoServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorListServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorListServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorScheduleByHospitalServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorScheduleByHospitalServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorScheduleServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorScheduleServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorsWithDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/DoctorsWithDetails.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/RegisterServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctor/RegisterServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctorProfile/UpdateDoctorProfileServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/doctorProfile/UpdateDoctorProfileServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/hospital/HospitalByLabServiceServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/hospital/HospitalByLabServiceServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/hospital/HospitalListServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/hospital/HospitalListServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/hospital/HospitalRegisterServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/hospital/HospitalRegisterServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/patient/RegisterServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/patient/RegisterServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/patient/UserDataServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/patient/UserDataServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/reports/UploadDoctorReportServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/servlets/reports/UploadDoctorReportServlet.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -298,7 +270,9 @@
       <workItem from="1747466375542" duration="21705000" />
       <workItem from="1747568181562" duration="4828000" />
       <workItem from="1747579637791" duration="1195000" />
-      <workItem from="1747746569595" duration="4196000" />
+      <workItem from="1747746569595" duration="5489000" />
+      <workItem from="1748348919596" duration="814000" />
+      <workItem from="1748351366745" duration="393000" />
     </task>
     <servers />
   </component>

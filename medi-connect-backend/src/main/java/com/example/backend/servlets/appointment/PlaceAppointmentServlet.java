@@ -56,11 +56,10 @@ public class PlaceAppointmentServlet extends HttpServlet {
 
                 if (!slotData.get("time_slot").getAsString().equals(appointment.getTimeSlot())) continue;
 
-                // 🧹 Clear all previous appointments and start fresh for new date
+                // 🧹 Clear all previous appointments and keep only for current date
                 JsonArray currentAppointments = slotData.getAsJsonArray("appointments");
                 JsonArray newAppointmentsList = new JsonArray();
 
-                // Retain only appointments with same date
                 for (JsonElement apptEl : currentAppointments) {
                     JsonObject appt = apptEl.getAsJsonObject();
                     if (appt.has("date") && appointment.getDate().equals(appt.get("date").getAsString())) {
@@ -68,7 +67,7 @@ public class PlaceAppointmentServlet extends HttpServlet {
                     }
                 }
 
-                // 🔁 Check for duplicate for same patient and date
+                // Check for duplicate for same patient and date
                 for (JsonElement app : newAppointmentsList) {
                     if (app.getAsJsonObject().get("patient_username").getAsString()
                             .equals(appointment.getPatientUsername())) {
@@ -78,7 +77,7 @@ public class PlaceAppointmentServlet extends HttpServlet {
                     }
                 }
 
-                // ✅ Add new appointment
+                // Add new appointment
                 JsonObject newAppt = new JsonObject();
                 newAppt.addProperty("patient_username", appointment.getPatientUsername());
                 newAppt.addProperty("urgency", appointment.getUrgency());
@@ -86,19 +85,21 @@ public class PlaceAppointmentServlet extends HttpServlet {
                 newAppt.addProperty("date", appointment.getDate());
                 newAppointmentsList.add(newAppt);
 
-                // 🔽 Sort using quick sort
-                List<JsonObject> sortedList = new ArrayList<>();
-                for (JsonElement e : newAppointmentsList) sortedList.add(e.getAsJsonObject());
-                quickSortByUrgency(sortedList, 0, sortedList.size() - 1);
+                // Sort using Bubble Sort with queue
+                List<JsonObject> tempList = new ArrayList<>();
+                for (JsonElement e : newAppointmentsList) tempList.add(e.getAsJsonObject());
 
+                Queue<JsonObject> sortedQueue = bubbleSortByUrgencyUsingQueue(tempList);
                 JsonArray sortedAppointments = new JsonArray();
-                for (JsonObject obj : sortedList) sortedAppointments.add(obj);
+                while (!sortedQueue.isEmpty()) {
+                    sortedAppointments.add(sortedQueue.poll());
+                }
 
                 slotData.add("appointments", sortedAppointments);
                 slotData.addProperty("number_of_bookings", sortedAppointments.size());
                 slotData.addProperty("next_time_slot", calculateNextTime(slotData.get("time_slot").getAsString(), sortedAppointments.size()));
 
-                // 📁 Save patient appointment history
+                // Save patient appointment history
                 Path userAppointmentFile = Paths.get(baseDir, "appointments", appointment.getPatientUsername() + "_appointment.txt");
                 JsonArray userAppointments;
                 if (Files.exists(userAppointmentFile)) {
@@ -141,24 +142,23 @@ public class PlaceAppointmentServlet extends HttpServlet {
         return next.toString();
     }
 
-    private void quickSortByUrgency(List<JsonObject> list, int low, int high) {
-        if (low < high) {
-            int pi = partition(list, low, high);
-            quickSortByUrgency(list, low, pi - 1);
-            quickSortByUrgency(list, pi + 1, high);
-        }
-    }
+    private Queue<JsonObject> bubbleSortByUrgencyUsingQueue(List<JsonObject> appointmentList) {
+        Queue<JsonObject> queue = new LinkedList<>(appointmentList);
+        List<JsonObject> tempList = new ArrayList<>(queue);
 
-    private int partition(List<JsonObject> list, int low, int high) {
-        int pivot = list.get(high).get("urgency").getAsInt();
-        int i = low - 1;
-        for (int j = low; j < high; j++) {
-            if (list.get(j).get("urgency").getAsInt() >= pivot) {
-                i++;
-                Collections.swap(list, i, j);
+        int n = tempList.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                int urgency1 = tempList.get(j).get("urgency").getAsInt();
+                int urgency2 = tempList.get(j + 1).get("urgency").getAsInt();
+                if (urgency1 < urgency2) {
+                    Collections.swap(tempList, j, j + 1);
+                }
             }
         }
-        Collections.swap(list, i + 1, high);
-        return i + 1;
+
+        Queue<JsonObject> sortedQueue = new LinkedList<>();
+        sortedQueue.addAll(tempList);
+        return sortedQueue;
     }
 }
